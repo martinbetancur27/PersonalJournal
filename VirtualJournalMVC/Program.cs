@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add DbContext
+builder.Services.AddDbContext<VirtualJournalDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("VirtualJournalConnection")
+    ));
 
 var app = builder.Build();
 
