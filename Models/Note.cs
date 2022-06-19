@@ -29,6 +29,7 @@ namespace Models
         [ForeignKey("IdAccount")]
 
         public virtual Account Account { get; set; }
+
         public virtual Journal Journal { get; set; }
 
     }

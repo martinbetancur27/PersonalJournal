@@ -39,6 +39,27 @@ namespace Data
             modelbuilder.Entity<Note>().ToTable("Note");
             modelbuilder.Entity<Comment>().ToTable("Comment");
             modelbuilder.Entity<Administrator>().ToTable("Administrator");
+
+            modelbuilder.Entity<Note>()
+                .HasOne(e => e.Account)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Note>()
+                .HasOne(e => e.Journal)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelbuilder.Entity<Comment>()
+                .HasOne(e => e.Account)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelbuilder.Entity<Comment>()
+                .HasOne(e => e.Note)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

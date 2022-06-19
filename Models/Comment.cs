@@ -22,10 +22,12 @@ namespace Models
 
         public int IdNote { get; set; }
         [ForeignKey("IdNote")]
+
         public int IdAccount { get; set; }
         [ForeignKey("IdAccount")]
 
         public virtual Account Account { get; set; }
+
         public virtual Note Note { get; set; }
     }
 }
