@@ -116,8 +116,7 @@ namespace Data.Migrations
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdJournal = table.Column<int>(type: "int", nullable: false),
-                    IdAccount = table.Column<int>(type: "int", nullable: false),
-                    JournalIdJournal = table.Column<int>(type: "int", nullable: false)
+                    IdAccount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,10 +126,10 @@ namespace Data.Migrations
                         column: x => x.IdAccount,
                         principalTable: "Account",
                         principalColumn: "IdAccount",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Note_Journal_JournalIdJournal",
-                        column: x => x.JournalIdJournal,
+                        name: "FK_Note_Journal_IdJournal",
+                        column: x => x.IdJournal,
                         principalTable: "Journal",
                         principalColumn: "IdJournal",
                         onDelete: ReferentialAction.Restrict);
@@ -146,8 +145,7 @@ namespace Data.Migrations
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdNote = table.Column<int>(type: "int", nullable: false),
-                    IdAccount = table.Column<int>(type: "int", nullable: false),
-                    NoteIdNote = table.Column<int>(type: "int", nullable: false)
+                    IdAccount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,10 +155,10 @@ namespace Data.Migrations
                         column: x => x.IdAccount,
                         principalTable: "Account",
                         principalColumn: "IdAccount",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comment_Note_NoteIdNote",
-                        column: x => x.NoteIdNote,
+                        name: "FK_Comment_Note_IdNote",
+                        column: x => x.IdNote,
                         principalTable: "Note",
                         principalColumn: "IdNote",
                         onDelete: ReferentialAction.Restrict);
@@ -182,9 +180,9 @@ namespace Data.Migrations
                 column: "IdAccount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_NoteIdNote",
+                name: "IX_Comment_IdNote",
                 table: "Comment",
-                column: "NoteIdNote");
+                column: "IdNote");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Journal_IdAccount",
@@ -197,9 +195,9 @@ namespace Data.Migrations
                 column: "IdAccount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Note_JournalIdJournal",
+                name: "IX_Note_IdJournal",
                 table: "Note",
-                column: "JournalIdJournal");
+                column: "IdJournal");
 
             migrationBuilder.CreateIndex(
                 name: "IX_People_IdAccount",

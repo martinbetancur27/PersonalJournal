@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(VirtualJournalDbContext))]
-    [Migration("20220619044501_AddModelsToDatabase")]
+    [Migration("20220619204251_AddModelsToDatabase")]
     partial class AddModelsToDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,9 +106,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NoteIdNote")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
@@ -116,7 +113,7 @@ namespace Data.Migrations
 
                     b.HasIndex("IdAccount");
 
-                    b.HasIndex("NoteIdNote");
+                    b.HasIndex("IdNote");
 
                     b.ToTable("Comment", (string)null);
                 });
@@ -170,9 +167,6 @@ namespace Data.Migrations
                     b.Property<int>("IdJournal")
                         .HasColumnType("int");
 
-                    b.Property<int>("JournalIdJournal")
-                        .HasColumnType("int");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -188,7 +182,7 @@ namespace Data.Migrations
 
                     b.HasIndex("IdAccount");
 
-                    b.HasIndex("JournalIdJournal");
+                    b.HasIndex("IdJournal");
 
                     b.ToTable("Note", (string)null);
                 });
@@ -242,12 +236,12 @@ namespace Data.Migrations
                     b.HasOne("Models.Account", "Account")
                         .WithMany()
                         .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Models.Note", "Note")
                         .WithMany()
-                        .HasForeignKey("NoteIdNote")
+                        .HasForeignKey("IdNote")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -272,12 +266,12 @@ namespace Data.Migrations
                     b.HasOne("Models.Account", "Account")
                         .WithMany()
                         .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Models.Journal", "Journal")
                         .WithMany()
-                        .HasForeignKey("JournalIdJournal")
+                        .HasForeignKey("IdJournal")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

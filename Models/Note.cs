@@ -24,13 +24,13 @@ namespace Models
 
         public int IdJournal { get; set; }
         [ForeignKey("IdJournal")]
+        public virtual Journal Journal { get; set; }
 
         public int IdAccount { get; set; }
         [ForeignKey("IdAccount")]
-
         public virtual Account Account { get; set; }
 
-        public virtual Journal Journal { get; set; }
+        
 
     }
 }

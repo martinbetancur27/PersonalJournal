@@ -40,21 +40,26 @@ namespace Data
             modelbuilder.Entity<Comment>().ToTable("Comment");
             modelbuilder.Entity<Administrator>().ToTable("Administrator");
 
-            modelbuilder.Entity<Note>()
+
+        //Solution to: Introducing FOREIGN KEY constraint 'FK_Note_Journal_IdJournal' on table 'Note'
+        //may cause cycles or multiple cascade paths.
+        //Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+        //Could not create constraint or index. See previous errors.
+
+            /*modelbuilder.Entity<Note>()
                 .HasOne(e => e.Account)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);*/
 
             modelbuilder.Entity<Note>()
                 .HasOne(e => e.Journal)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            modelbuilder.Entity<Comment>()
+            /*modelbuilder.Entity<Comment>()
                 .HasOne(e => e.Account)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);*/
 
             modelbuilder.Entity<Comment>()
                 .HasOne(e => e.Note)
