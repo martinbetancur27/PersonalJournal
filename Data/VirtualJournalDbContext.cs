@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Data
 {
-    public class VirtualJournalDbContext : DbContext
+    public class VirtualJournalDbContext : IdentityDbContext<IdentityUser>
     {
         public VirtualJournalDbContext(DbContextOptions<VirtualJournalDbContext> options) : base(options)
         {
@@ -65,6 +67,9 @@ namespace Data
                 .HasOne(e => e.Note)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //The entity type 'IdentityUserLogin<string>' requires a primary key to be defined.
+            base.OnModelCreating(modelbuilder);
         }
     }
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Data;
+using Microsoft.AspNetCore.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,20 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<VirtualJournalDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("VirtualJournalConnection")
     ));
+
+// Identity
+builder.Services.AddDefaultIdentity<IdentityUser>
+    (options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+    })
+.AddEntityFrameworkStores<VirtualJournalDbContext>();
+
 
 var app = builder.Build();
 
@@ -25,6 +41,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//Identity
+app.UseAuthentication();
 
 app.UseAuthorization();
 
