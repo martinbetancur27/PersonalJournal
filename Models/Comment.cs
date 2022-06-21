@@ -24,10 +24,7 @@ namespace Models
         [ForeignKey("IdNote")]
         public virtual Note Note { get; set; }
 
-        public int IdAccount { get; set; }
-        [ForeignKey("IdAccount")]
-        public virtual Account Account { get; set; }
-
+        public string IdUser { get; set; }
         
     }
 }

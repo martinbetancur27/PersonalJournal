@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(VirtualJournalDbContext))]
-    [Migration("20220620170015_AddIdentityUser")]
-    partial class AddIdentityUser
+    [Migration("20220621155155_ModelsAndIdentityToDatabase")]
+    partial class ModelsAndIdentityToDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,67 +226,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Models.Account", b =>
-                {
-                    b.Property<int>("IdAccount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAccount"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdAccount");
-
-                    b.ToTable("Account", (string)null);
-                });
-
-            modelBuilder.Entity("Models.Administrator", b =>
-                {
-                    b.Property<int>("IdAdministrator")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAdministrator"), 1L, 1);
-
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdAdministrator");
-
-                    b.HasIndex("IdAccount");
-
-                    b.ToTable("Administrator", (string)null);
-                });
-
-            modelBuilder.Entity("Models.ClientWriter", b =>
-                {
-                    b.Property<int>("IdClientWriter")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdClientWriter"), 1L, 1);
-
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdClientWriter");
-
-                    b.HasIndex("IdAccount");
-
-                    b.ToTable("ClientWriter", (string)null);
-                });
-
             modelBuilder.Entity("Models.Comment", b =>
                 {
                     b.Property<int>("IdComment")
@@ -298,11 +237,12 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdNote")
                         .HasColumnType("int");
+
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -312,8 +252,6 @@ namespace Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdComment");
-
-                    b.HasIndex("IdAccount");
 
                     b.HasIndex("IdNote");
 
@@ -331,8 +269,9 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -346,8 +285,6 @@ namespace Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdJournal");
-
-                    b.HasIndex("IdAccount");
 
                     b.ToTable("Journal", (string)null);
                 });
@@ -363,11 +300,12 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdJournal")
                         .HasColumnType("int");
+
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -382,33 +320,9 @@ namespace Data.Migrations
 
                     b.HasKey("IdNote");
 
-                    b.HasIndex("IdAccount");
-
                     b.HasIndex("IdJournal");
 
                     b.ToTable("Note", (string)null);
-                });
-
-            modelBuilder.Entity("Models.People", b =>
-                {
-                    b.Property<int>("IdPerson")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPerson"), 1L, 1);
-
-                    b.Property<int>("IdAccount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdPerson");
-
-                    b.HasIndex("IdAccount");
-
-                    b.ToTable("People", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -462,86 +376,26 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.Administrator", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("Models.ClientWriter", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("Models.Comment", b =>
                 {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Models.Note", "Note")
                         .WithMany()
                         .HasForeignKey("IdNote")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Account");
 
                     b.Navigation("Note");
                 });
 
-            modelBuilder.Entity("Models.Journal", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("Models.Note", b =>
                 {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Models.Journal", "Journal")
                         .WithMany()
                         .HasForeignKey("IdJournal")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Journal");
-                });
-
-            modelBuilder.Entity("Models.People", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("IdAccount")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Journal");
                 });
 #pragma warning restore 612, 618
         }
