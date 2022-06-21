@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Data;
 using Microsoft.AspNetCore.Identity;
-
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,7 @@ builder.Services.AddControllersWithViews();
 
 
 // Identity
-builder.Services.AddDefaultIdentity<IdentityUser>
+builder.Services.AddDefaultIdentity<ApplicationUser>
     (options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
