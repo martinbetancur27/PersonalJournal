@@ -26,7 +26,7 @@ namespace Models
         [ForeignKey("IdJournal")]
         public virtual Journal Journal { get; set; }
 
-        public string IdUser { get; set; }
+        
 
     }
 }
