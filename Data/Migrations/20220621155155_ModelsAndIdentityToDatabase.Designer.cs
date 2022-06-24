@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
-    [DbContext(typeof(VirtualJournalDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20220621155155_ModelsAndIdentityToDatabase")]
     partial class ModelsAndIdentityToDatabase
     {

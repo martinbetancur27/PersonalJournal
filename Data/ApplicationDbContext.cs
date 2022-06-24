@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Data
 {
-    public class VirtualJournalDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
-        public VirtualJournalDbContext(DbContextOptions<VirtualJournalDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
