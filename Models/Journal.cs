@@ -22,7 +22,7 @@ namespace Models
 
         public DateTime UpdateDate { get; set; }
 
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         
         public string IdUser { get; set; }
