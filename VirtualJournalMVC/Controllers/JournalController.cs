@@ -19,7 +19,7 @@ namespace VirtualJournalMVC.Controllers
             return View();
         }
 
-        public IActionResult UpdateJournal()
+        public IActionResult EditJournal()
         {
             return View();
         }
@@ -44,7 +44,7 @@ namespace VirtualJournalMVC.Controllers
             return View();
         }
 
-        public IActionResult UpdateNote()
+        public IActionResult EditNote()
         {
             return View();
         }
