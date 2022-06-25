@@ -20,7 +20,7 @@ namespace Models
 
         public DateTime CreateDate { get; set; }
 
-        public DateTime UpdateDate { get; set; }
+        public DateTime? LastEditDate { get; set; }
 
         public string? Message { get; set; }
 
