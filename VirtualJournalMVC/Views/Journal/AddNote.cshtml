@@ -3,3 +3,35 @@
 *@
 @{
 }
+
+<div class="container">
+    <h2>Add Note</h2>
+</div>
+
+<form method="post">
+    <div class="container">
+
+        <div class="form-floating mb-3">
+        <input id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+        <label for="titleNote">Write your title</label>
+        </div>
+
+        
+        <!-- Textarea with class .w-50 -->
+        <div class="form-floating form-outline mb-2">
+        <textarea maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 500px"></textarea>
+        <label for="textAreaNote">Write your note</label>  
+        </div>
+
+        <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary mb-1 btn-lg">
+        Send
+        </button>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-outline-secundary btn-lg">Back</a>
+        </div>
+
+    </div>
+</form>

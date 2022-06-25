@@ -3,3 +3,34 @@
 *@
 @{
 }
+
+<div class="container">
+    <h2>Create Journal</h2>
+</div>
+
+<form method="post">
+    <div class="container">
+
+        <div class="form-floating mb-3">
+        <input id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+        <label for="titleJournal">Write your title</label>
+        </div>
+
+
+        <div class="form-floating">
+            <textarea maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px;"></textarea>
+            <label for="floatingTextarea2">Write Description</label>
+        </div>
+
+        <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary mb-1 btn-lg">
+        Create
+        </button>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-outline-secundary btn-lg">Back</a>
+        </div>
+
+    </div>
+</form>

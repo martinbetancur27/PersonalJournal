@@ -3,3 +3,47 @@
 *@
 @{
 }
+
+
+<div class="container overflow-auto border rounded" style="height:80%">
+
+    <div class="d-grid gap-2 d-md-flex">
+        <h2>Notes - Journal Name</h2>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a asp-controller="Journal" asp-action="AddNote" class="btn btn-primary mb-1">Add Note</a>
+    </div>
+
+<table class="table table-light table-striped table-hover" style="widht:100%">
+    <thead style = "position: sticky;top: 0;">
+        <tr>
+            <th>Date</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+    <tr>
+        <td width="5%">
+            2022/06/23
+        </td>
+        <td width="70%">
+            Title
+        </td width="25%">
+        <td>
+            <div class="w-75 btn-group flex-wrap" role="group">
+                <a
+                class="btn btn-outline-primary"> View</a>
+                <a
+                class="btn btn-outline-primary"> Edit</a>
+                <a
+                class="btn btn-outline-primary"> Delete</a>
+            </div>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+</div>

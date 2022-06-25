@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models
+@model IEnumerable<Journal>
+
 @{
+    ViewData["Title"] = "Index";
 }
+
+<div class="container overflow-auto border rounded" style="height:80%">
+
+    <div class="d-grid gap-2 d-md-flex">
+        <h2>Journals</h2>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a asp-controller="Journal" asp-action="AddJournal" class="btn btn-primary mb-1">Add Journal</a>
+    </div>
+            
+    <table class="table table-light table-striped table-hover" style="widht:100%">
+        <thead style = "position: sticky;top: 0;">
+            <tr>
+                <th>Date</th>
+                <th>Journal</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td width="5%">
+                    2022/06/23
+                </td>
+                <td width="65%">
+                    Title
+                </td width="30%">
+                <td>
+                    <div class="w-75 btn-group flex-wrap" role="group">
+                        <a
+                        class="btn btn-outline-primary"> Notes</a>
+                        
+                        <a
+                        class="btn btn-outline-primary"> Details</a>
+                    
+                        <a
+                        class="btn btn-outline-primary"> Delete</a>
+                    </div>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div>

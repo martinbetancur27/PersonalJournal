@@ -3,3 +3,35 @@
 *@
 @{
 }
+
+
+<div class="container">
+    <h2>Delete Journal</h2>
+</div>
+
+<form method="post">
+    <div class="container">
+
+        <div class="form-floating mb-3">
+        <input readonly id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" 
+        style="background-color: white;" value= "Example"/>
+        <label for="titleJournal">Created: Date</label>
+        </div>
+
+
+        <div class="form-floating">
+            <textarea readonly maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px; background-color: white;">Example</textarea>
+            <label for="floatingTextarea2">Description</label>
+        </div>
+
+        <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-danger mb-1 btn-lg">
+        Delete
+        </button>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
+        </div>
+    </div>
+</form>
