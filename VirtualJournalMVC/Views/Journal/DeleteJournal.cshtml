@@ -1,6 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models
+@model Journal
+
 @{
 }
 
@@ -10,28 +10,29 @@
 </div>
 
 <form method="post">
+
     <div class="container">
 
         <div class="form-floating mb-3">
-        <input readonly id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" 
-        style="background-color: white;" value= "Example"/>
-        <label for="titleJournal">Created: Date</label>
+        <input asp-for="Title" readonly id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" 
+        style="background-color: white;"/>
+        <label for="titleJournal">Created: @Model?.CreateDate</label>
         </div>
 
 
         <div class="form-floating">
-            <textarea readonly maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px; background-color: white;">Example</textarea>
+            <textarea asp-for="Message" readonly maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px; background-color: white;"></textarea>
             <label for="floatingTextarea2">Description</label>
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-danger mb-1 btn-lg">
+        <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdJournal">
         Delete
         </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
+            <a asp-controller="Journal" asp-action="Index" class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
         </div>
     </div>
 </form>

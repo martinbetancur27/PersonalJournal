@@ -1,9 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Data;
+using Models;
 
 namespace VirtualJournalMVC.Controllers
 {
     public class JournalController : Controller
     {
+        private readonly ApplicationDbContext _db;
+
+        public JournalController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -24,7 +33,7 @@ namespace VirtualJournalMVC.Controllers
             return View();
         }
 
-        public IActionResult DeleteJournal()
+        public IActionResult DeleteJournal(int? IdJournal)
         {
             return View();
         }

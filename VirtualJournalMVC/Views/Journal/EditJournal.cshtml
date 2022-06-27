@@ -1,6 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models
+@model Journal
+
+
 @{
 }
 
@@ -13,24 +14,24 @@
     <div class="container">
 
         <div class="form-floating mb-3">
-        <input id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" value="Text"/>
+        <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" value="Text"/>
         <label for="titleJournal">Write your title</label>
         </div>
 
 
         <div class="form-floating">
-            <textarea maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px;">Text</textarea>
+            <textarea asp-for="Message" maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px;">Text</textarea>
             <label for="floatingTextarea2">Write Description</label>
         </div>
 
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-warning mb-1 btn-lg">
+            <button type="submit" class="btn btn-warning mb-1 btn-lg" asp-route-id="@Model?.IdJournal">
             Edit
             </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
+            <a asp-controller="Journal" asp-action="Index" class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
         </div>
     </div>
 </form>

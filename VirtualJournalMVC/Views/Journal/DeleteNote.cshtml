@@ -1,6 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models
+@model Note
+
 @{
 }
 
@@ -10,25 +10,26 @@
 </div>
 
 <form method="post">
+
     <div class="container">
 
         <div class="container border border-2 rounded">
-        <h3 id= "titleNoteStatic" class="fw-bolder mb-3 text-secondary">Title - Example</h3>
+        <h3 asp-for="Title" id= "titleNoteStatic" class="fw-bolder mb-3 text-secondary"></h3>
         </div>
 
         <div class="form-floating form-outline mb-2">
-            <textarea readonly id="textAreaNoteStatic" class="form-control" rows="18" style="height: 500px; background-color: white;">Text - Example</textarea>
-            <label for="textAreaNote">Created: Date</label>
+            <textarea asp-for="Message" readonly id="textAreaNoteStatic" class="form-control" rows="18" style="height: 500px; background-color: white;"></textarea>
+            <label for="textAreaNote">Created: @Model?.CreateDate</label>
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-danger mb-1 btn-lg">
+        <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdNote">
         Delete
         </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
+            <a asp-controller="Journal" asp-action="Notes" class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
         </div>
 
     </div>
