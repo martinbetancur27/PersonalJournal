@@ -1,22 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Data;
 using Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using IService;
+
 
 namespace VirtualJournalMVC.Controllers
 {
+    [Authorize]
     public class JournalController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IUserService _userService;
 
-        public JournalController(ApplicationDbContext db)
+
+        public JournalController(ApplicationDbContext db, IUserService userService)
         {
             _db = db;
+            _userService = userService;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
 
         public IActionResult AddJournal()
         {

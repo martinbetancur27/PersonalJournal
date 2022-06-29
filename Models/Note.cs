@@ -22,6 +22,7 @@ namespace Models
 
         public string Message { get; set; }
 
+
         public int IdJournal { get; set; }
         [ForeignKey("IdJournal")]
         public virtual Journal Journal { get; set; }

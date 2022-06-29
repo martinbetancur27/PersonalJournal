@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Data;
 using Microsoft.AspNetCore.Identity;
 using Models;
+using Service;
+using IService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>
         options.Password.RequireLowercase = false;
     })
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<IUserService, UserManagerService>();
 
 
 var app = builder.Build();

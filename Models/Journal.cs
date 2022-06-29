@@ -24,7 +24,7 @@ namespace Models
 
         public string? Message { get; set; }
 
-        
+                
         public string IdUser { get; set; }
         [ForeignKey("IdUser")]
         public virtual ApplicationUser AspNetUsers { get; set; }

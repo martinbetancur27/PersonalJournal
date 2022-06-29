@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualJournalMVC", "VirtualJournalMVC\VirtualJournalMVC.csproj", "{4F37B838-28F6-43F7-807D-292692B996B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IService", "IService\IService.csproj", "{C990A0CC-A31A-4F6E-8F4F-C5CC2749CBB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4F37B838-28F6-43F7-807D-292692B996B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F37B838-28F6-43F7-807D-292692B996B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F37B838-28F6-43F7-807D-292692B996B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C990A0CC-A31A-4F6E-8F4F-C5CC2749CBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C990A0CC-A31A-4F6E-8F4F-C5CC2749CBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C990A0CC-A31A-4F6E-8F4F-C5CC2749CBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C990A0CC-A31A-4F6E-8F4F-C5CC2749CBB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
