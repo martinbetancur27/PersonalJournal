@@ -1,6 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models
+@model IEnumerable<Note>
+
 @{
 }
 
@@ -8,7 +8,7 @@
 <div class="container overflow-auto border rounded" style="height:80%">
 
     <div class="d-grid gap-2 d-md-flex">
-        <h2>Notes - Journal Name</h2>
+        <h2>Notes</h2>
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -24,26 +24,29 @@
         </tr>
     </thead>
     <tbody>
-    
-    <tr>
-        <td width="5%">
-            2022/06/23
-        </td>
-        <td width="70%">
-            Title
-        </td width="25%">
-        <td>
-            <div class="w-75 btn-group flex-wrap" role="group">
-                <a
-                class="btn btn-outline-primary"> View</a>
-                <a
-                class="btn btn-outline-primary"> Edit</a>
-                <a
-                class="btn btn-outline-primary"> Delete</a>
-            </div>
-        </td>
-    </tr>
+    @foreach (var post in Model)
+    {
+        <tr>
+            <td width="5%">
+                @post.CreateDate
+            </td>
+            <td width="70%">
+                @post.Title
+            </td>
+            <td width="25%">
+                <div class="w-75 btn-group flex-wrap" role="group">
+                    <a asp-controller="Journal" asp-action="ShowNote" asp-route-id="@post.IdNote"
+                    class="btn btn-outline-primary"> View</a>
 
+                    <a asp-controller="Journal" asp-action="EditNote" asp-route-id="@post.IdNote"
+                    class="btn btn-outline-primary"> Edit</a>
+
+                    <a asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@post.IdNote"
+                    class="btn btn-outline-primary"> Delete</a>
+                </div>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 </div>

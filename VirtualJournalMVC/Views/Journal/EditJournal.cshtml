@@ -12,20 +12,25 @@
 
 <form method="post">
     <div class="container">
+        <input type="hidden" asp-for="IdJournal" />
+        <input type="hidden" asp-for="IdUser" />
+        <input type="hidden" asp-for="CreateDate" />
+        <input type="hidden" asp-for="LastEditDate" />
+        
 
         <div class="form-floating mb-3">
-        <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" value="Text"/>
-        <label for="titleJournal">Write your title</label>
+        <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+        <label for="titleJournal">Created: @Model?.CreateDate</label>
         </div>
 
 
         <div class="form-floating">
-            <textarea asp-for="Message" maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px;">Text</textarea>
+            <textarea asp-for="Message" maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px;"></textarea>
             <label for="floatingTextarea2">Write Description</label>
         </div>
 
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-warning mb-1 btn-lg" asp-route-id="@Model?.IdJournal">
+            <button type="submit" class="btn btn-warning mb-1 btn-lg">
             Edit
             </button>
         </div>

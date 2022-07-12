@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
-
 namespace Models
 {
     public class Journal
@@ -24,7 +22,7 @@ namespace Models
 
         public string? Message { get; set; }
 
-                
+
         public string IdUser { get; set; }
         [ForeignKey("IdUser")]
         public virtual ApplicationUser AspNetUsers { get; set; }

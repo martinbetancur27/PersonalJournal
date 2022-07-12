@@ -14,8 +14,8 @@
     <div class="container">
 
         <div class="form-floating mb-3">
-        <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" value="Title - Example"/>
-        <label for="titleNote">Created: Date</label>
+        <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+        <label for="titleNote">Created: @Model?.CreateDate</label>
         </div>
 
         

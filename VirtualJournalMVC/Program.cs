@@ -27,11 +27,26 @@ builder.Services.AddDefaultIdentity<ApplicationUser>
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
     })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUserService, UserManagerService>();
 
+builder.Services.AddScoped<IPostRoot, JournalService>();
+builder.Services.AddScoped<IPostComposite, JournalService>();
+builder.Services.AddScoped<IPostComposite, NoteService>();
+builder.Services.AddScoped<IPostLeaf, CommentService>();
+
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -52,6 +67,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

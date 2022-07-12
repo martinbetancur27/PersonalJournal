@@ -12,7 +12,7 @@
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a asp-controller="Journal" asp-action="AddJournal" class="btn btn-primary mb-1">Add Journal</a>
+        <a asp-controller="Journal" asp-action="CreateJournal" class="btn btn-primary mb-1">Add Journal</a>
     </div>
             
     <table class="table table-light table-striped table-hover" style="widht:100%">
@@ -24,28 +24,29 @@
             </tr>
         </thead>
         <tbody>
-            
+            @foreach (var post in Model)
+            {
             <tr>
                 <td width="5%">
-                    2022/06/23
+                    @post.CreateDate
                 </td>
                 <td width="65%">
-                    Title
-                </td width="30%">
-                <td>
+                    @post.Title
+                </td>
+                <td width="30%">
                     <div class="w-75 btn-group flex-wrap" role="group">
-                        <a
+                        <a asp-controller="Journal" asp-action="Notes" asp-route-id="@post.IdJournal"
                         class="btn btn-outline-primary"> Notes</a>
                         
-                        <a
+                        <a asp-controller="Journal" asp-action="DetailsJournal" asp-route-id="@post.IdJournal"
                         class="btn btn-outline-primary"> Details</a>
                     
-                        <a
+                        <a asp-controller="Journal" asp-action="DeleteJournal" asp-route-id="@post.IdJournal"
                         class="btn btn-outline-primary"> Delete</a>
                     </div>
                 </td>
             </tr>
-            
+            }    
         </tbody>
     </table>
 </div>
