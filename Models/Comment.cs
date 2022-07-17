@@ -20,7 +20,7 @@ namespace Models
 
         public int IdNote { get; set; }
         [ForeignKey("IdNote")]
-        public virtual Note Note { get; set; }
+        public Note Note { get; set; }
 
 
         

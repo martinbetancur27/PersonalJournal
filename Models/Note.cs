@@ -25,9 +25,9 @@ namespace Models
 
         public int IdJournal { get; set; }
         [ForeignKey("IdJournal")]
-        public virtual Journal Journal { get; set; }
+        public Journal Journal { get; set; }
 
-        
+        public List<Comment>? Comments { get; set; }
 
     }
 }
