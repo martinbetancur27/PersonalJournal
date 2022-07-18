@@ -121,6 +121,7 @@ namespace VirtualJournalMVC.Controllers
         public IActionResult ShowNote(int id)
         {
             Note post = _note.ShowPost<Note>(id);
+            ViewBag.Comments = _note.GetListSubPosts<Comment>(id);
             return View(post);
         }
 
@@ -186,10 +187,15 @@ namespace VirtualJournalMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddComment(Comment post)
+        public IActionResult AddComment(string commentText, int id)
         {
-            //bool postResponse = _note.AddPost(post);
-            return View();
+            Comment post = new Comment();
+            post.Message = commentText;
+            
+            bool postResponse = _note.AddPost(post, id);
+                       
+            return RedirectToAction("ShowNote", new { id = post.IdNote });
+            
         }
 
         [HttpPost]

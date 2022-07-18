@@ -43,30 +43,38 @@
 <div class="container border border-light border-3 rounded">
     <h2>Comments</h2>
     
-    <form method="post">
+    <form method="post" >
         <div class="form-floating">
-            <textarea maxlength="800" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px;"></textarea>
-            <label for="floatingTextarea2">Write Comment</label>
+            <textarea name="commentText" id="commentText" maxlength="800" class="form-control" style="height: 100px;"></textarea>
+            <label for="commentText">Write Comment</label>
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit" class="btn btn-primary mb-1 btn-sm">Send</button>
+            
+            <button type="submit"  class="btn btn-primary mb-1 btn-sm" asp-controller="Journal" asp-action="AddComment" asp-route-id="@Model?.IdNote">Send</button>
         </div>
     </form>              
 
 
     <div class="container">
-       
+        @if(Enumerable.Any(ViewBag.Comments))
+        {
+        foreach (var post in ViewBag.Comments)
+        {
             <div class="form-floating">
-            <textarea readonly class="form-control" id="floatingTextarea3" style="height: 100px; background-color: #FAFAFD;"></textarea>
-            <label for="floatingTextarea3">Created: </label>
+            <textarea readonly class="form-control" id="floatingTextarea3" style="height: 100px; background-color: #FAFAFD;">@post.Message</textarea>
+            <label for="floatingTextarea3">Created: @post.CreateDate</label>
             </div>
             
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <a class="btn btn-outline-danger btn-sm">Delete</a>
             </div>
-        
-
+        }
+        }
+        else
+        {
+            <h3>No comment</h3>
+        }
         
 
     </div>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IService;
 using Data;
 using Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
@@ -127,7 +128,9 @@ namespace Service
                 {
                     return null;
                 }
-                Note postFromDb = _databaseContext.Notes.Find(idPost);
+                //Note postFromDb = _databaseContext.Notes.Where(x => x.IdNote == idPost).Include(c => c.Comments).FirstOrDefault();
+
+                Note postFromDb = _databaseContext.Notes.FirstOrDefault(x => x.IdNote == idPost);
                 
                 if (postFromDb == null)
                 {
