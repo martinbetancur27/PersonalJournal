@@ -12,6 +12,10 @@
 
 <form method="post">
     <div class="container">
+        <input type="hidden" asp-for="IdNote" />
+        <input type="hidden" asp-for="IdJournal" />
+        <input type="hidden" asp-for="CreateDate" />
+        <input type="hidden" asp-for="LastEditDate" />
 
         <div class="form-floating mb-3">
         <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>

@@ -54,6 +54,7 @@ namespace Service
                 if (typeof(Post).Equals(typeof(Note)))
                 {
                     Note? note = post as Note;
+                    note.LastEditDate = DateTime.Now;
                     _databaseContext.Notes.Update(note);
                     _databaseContext.SaveChanges();
                     return true;
@@ -78,7 +79,7 @@ namespace Service
                     return false;
                 }
                 
-                DeleteSubPosts(idPost);
+                //DeleteSubPosts(idPost);
                 
                 _databaseContext.Notes.Remove(post);
                 _databaseContext.SaveChanges();

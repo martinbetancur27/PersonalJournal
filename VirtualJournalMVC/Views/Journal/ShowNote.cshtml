@@ -23,17 +23,17 @@
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-light mb-1 btn-lg" asp-controller="Journal" asp-action="EditNote">
+        <a class="btn btn-light mb-1 btn-lg" asp-controller="Journal" asp-action="EditNote" asp-route-id="@Model?.IdNote">
         Edit
-        </button>
+        </a>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-outline-danger btn-sm">Delete</a>
+        <a class="btn btn-outline-danger btn-sm"  asp-controller="Journal" asp-action="EditNote" asp-route-id="@Model?.IdNote">Delete</a>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-secundary btn-sm">Back</a>
+            <a class="btn btn-outline-secundary btn-sm"  asp-controller="Journal" asp-action="Notes" asp-route-id="@Model?.IdJournal">Back</a>
         </div>
 
     </div>
