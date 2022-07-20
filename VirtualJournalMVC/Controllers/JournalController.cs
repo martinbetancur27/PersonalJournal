@@ -200,11 +200,10 @@ namespace VirtualJournalMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteComment(int id)
+        public IActionResult DeleteComment(int id, int idNote)
         { 
-  
             bool postResponse = _comment.DeletePost(id);
-            return View();
+            return RedirectToAction("ShowNote", new { id = idNote });
         }
     }
 }
