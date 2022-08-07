@@ -36,7 +36,7 @@
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a asp-controller="Journal" asp-action="Notes" class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
+            <a class="btn btn-outline-secundary btn-lg" asp-controller="Journal" asp-action="ShowNote" asp-route-id="@Model?.IdNote">Maybe, Not!</a>
         </div>
 
     </div>
