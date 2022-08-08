@@ -2,7 +2,34 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<!--<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div>-->
+
+<body style="background-color: black;">
+
+    <div class="container text-center justify-content-center align-items-center h-100">
+        <h1 class="display-1 bold text-white mb-0">Personal Journal</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-8 border border-4">
+                <h2 class="display-3 text-white mb-0">Think</h2>
+                <h2 class="display-5 text-white mb-0">Write and Save</h2>
+            </div>
+        </div>
+
+        <div class="col-8 btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-light" asp-controller="Journal" asp-action="Index">Open</a>
+            <a class="btn btn-light" asp-area="Identity" asp-page="/Account/Register">New User</a>
+        </div>
+
+        <div class="container row justify-content-center">
+            <div class="col-8">
+                <img src="images/butterfly-home.png" class="img-fluid img-responsive mx-auto d-block" style="background-color: black;"/>
+            </div>
+        </div>
+
+    </div>
+                        
+</body>
