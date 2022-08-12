@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Models;
 using Service;
 using IService;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,21 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+//Email
+
+builder.Services.Configure<SmtpService>(options =>
+{
+    options.HostAddress = builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:Address");
+    options.HostPort = Convert.ToInt32(builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:Port"));
+    options.HostUsername = builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:Account");
+    options.HostPassword = builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:Password");
+    options.SenderEmail = builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:SenderEmail");
+    options.SenderName = builder.Configuration.GetValue<string>("ExternalProviders:Gmail:SMTP:SenderName");
+});
+
+builder.Services.AddTransient<IEmailSender, EmailServiceMailKit> ();
+
 
 var app = builder.Build();
 
