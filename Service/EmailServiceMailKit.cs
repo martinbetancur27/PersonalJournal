@@ -32,9 +32,9 @@ namespace Service
             // send email
             using (var smtp = new SmtpClient())
             {
-                smtp.Connect(_smtp.HostAddress, _smtp.HostPort, true);
-                smtp.Authenticate(_smtp.HostUsername, _smtp.HostPassword);
-                smtp.Send(emailToSend);
+                await smtp.ConnectAsync(_smtp.HostAddress, _smtp.HostPort, true);
+                await smtp.AuthenticateAsync (_smtp.HostUsername, _smtp.HostPassword);
+                await smtp.SendAsync(emailToSend);
                 smtp.Disconnect(true);
             }
         }
