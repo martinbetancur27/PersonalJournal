@@ -24,29 +24,36 @@
         </tr>
     </thead>
     <tbody>
-    @foreach (var post in Model)
-    {
-        <tr>
-            <td width="w-20">
-                @post.CreateDate
-            </td>
-            <td width="w-50">
-                @post.Title
-            </td>
-            <td width="w-30">
-                <div class="w-75 btn-group flex-wrap" role="group">
-                    <a asp-controller="Journal" asp-action="ShowNote" asp-route-id="@post.IdNote"
-                    class="btn btn-outline-primary"> View</a>
+        @if(Enumerable.Any(Model))
+        {
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td width="w-20">
+                        @post.CreateDate
+                    </td>
+                    <td width="w-50">
+                        @post.Title
+                    </td>
+                    <td width="w-30">
+                        <div class="w-75 btn-group flex-wrap" role="group">
+                            <a asp-controller="Journal" asp-action="ShowNote" asp-route-id="@post.IdNote"
+                            class="btn btn-outline-primary"> View</a>
 
-                    <a asp-controller="Journal" asp-action="EditNote" asp-route-id="@post.IdNote"
-                    class="btn btn-outline-primary"> Edit</a>
+                            <a asp-controller="Journal" asp-action="EditNote" asp-route-id="@post.IdNote"
+                            class="btn btn-outline-primary"> Edit</a>
 
-                    <a asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@post.IdNote"
-                    class="btn btn-outline-primary"> Delete</a>
-                </div>
-            </td>
-        </tr>
-    }
+                            <a asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@post.IdNote"
+                            class="btn btn-outline-primary"> Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <h4>You don't have notes</h4>
+        }
     </tbody>
 </table>
 </div>
