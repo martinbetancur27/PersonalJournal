@@ -2,10 +2,10 @@
 @model IEnumerable<Note>
 
 @{
+    ViewData["Title"] = "Notes";
 }
 
-
-<div class="container overflow-auto border rounded" style="height:80%">
+<div class="container h-80 border rounded">
 
     <div class="d-grid gap-2 d-md-flex">
         <h2>Notes</h2>
@@ -15,8 +15,8 @@
         <a asp-controller="Journal" asp-action="AddNote" class="btn btn-primary mb-1">Add Note</a>
     </div>
 
-<table class="table table-light table-striped table-hover" style="widht:100%">
-    <thead style = "position: sticky;top: 0;">
+<table class="table table-light table-striped table-hover w-100">
+    <thead class="sticky-top">
         <tr>
             <th>Date</th>
             <th>Notes</th>
@@ -27,13 +27,13 @@
     @foreach (var post in Model)
     {
         <tr>
-            <td width="5%">
+            <td width="w-20">
                 @post.CreateDate
             </td>
-            <td width="70%">
+            <td width="w-50">
                 @post.Title
             </td>
-            <td width="25%">
+            <td width="w-30">
                 <div class="w-75 btn-group flex-wrap" role="group">
                     <a asp-controller="Journal" asp-action="ShowNote" asp-route-id="@post.IdNote"
                     class="btn btn-outline-primary"> View</a>

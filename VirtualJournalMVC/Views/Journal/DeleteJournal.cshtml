@@ -2,8 +2,8 @@
 @model Journal
 
 @{
+    ViewData["Title"] = @Model?.Title;
 }
-
 
 <div class="container">
     <h2>Delete Journal</h2>
@@ -14,14 +14,13 @@
     <div class="container">
 
         <div class="form-floating mb-3">
-        <input asp-for="Title" readonly id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg" 
-        style="background-color: white;"/>
-        <label for="titleJournal">Created: @Model?.CreateDate</label>
+            <input asp-for="Title" readonly id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary bg-white" aria-describedby="inputGroup-sizing-lg" />
+            <label for="titleJournal">Created: @Model?.CreateDate</label>
         </div>
 
 
         <div class="form-floating">
-            <textarea asp-for="Message" readonly maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 200px; background-color: white;"></textarea>
+            <textarea asp-for="Message" readonly maxlength="1200" class="form-control bg-white" id="floatingTextarea2" style="height: 14rem;"></textarea>
             <label for="floatingTextarea2">Description</label>
         </div>
 

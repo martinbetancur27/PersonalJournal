@@ -2,8 +2,8 @@
 @model Note
 
 @{
+    ViewData["Title"] = @Model?.Title;
 }
-
 
 <div class="container">
     <h2>Delete Note</h2>
@@ -18,14 +18,14 @@
         </div>
 
         <div class="form-floating form-outline mb-2">
-            <textarea asp-for="Message" readonly id="textAreaNoteStatic" class="form-control" rows="18" style="height: 500px; background-color: white;"></textarea>
+            <textarea asp-for="Message" readonly id="textAreaNoteStatic" class="form-control bg-white" rows="18" style="height: 32rem;"></textarea>
             <label for="textAreaNote">Created: @Model?.CreateDate</label>
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdNote">
-        Delete
-        </button>
+            <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdNote">
+                Delete
+            </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

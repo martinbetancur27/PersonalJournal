@@ -2,6 +2,7 @@
 @model Note
 
 @{
+    ViewData["Title"] = "Add note";
 }
 
 <div class="container">
@@ -16,10 +17,8 @@
         <label for="titleNote">Write your title</label>
         </div>
 
-        
-        <!-- Textarea with class .w-50 -->
         <div class="form-floating form-outline mb-2">
-        <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 500px"></textarea>
+        <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 32rem;"></textarea>
         <label for="textAreaNote">Write your note</label>  
         </div>
 
