@@ -1,6 +1,4 @@
-﻿@using Models
-@model Note
-
+﻿@model Models.ViewModels.EditNoteViewModel
 
 @{
     ViewData["Title"] = @Model?.Title;
@@ -13,22 +11,21 @@
 <form method="post">
     <div class="container">
         <input type="hidden" asp-for="IdNote" />
-        <input type="hidden" asp-for="IdJournal" />
-        <input type="hidden" asp-for="CreateDate" />
-        <input type="hidden" asp-for="LastEditDate" />
 
+        <span asp-validation-for="Title" class="text-danger"></span>
         <div class="form-floating mb-3">
         <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
-        <label for="titleNote">Created: @Model?.CreateDate</label>
+        <label for="titleNote">Write your title</label>
         </div>
 
+        <span asp-validation-for="Message" class="text-danger"></span>
         <div class="form-floating form-outline mb-2">
         <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 32rem;"></textarea>
         <label for="textAreaNote">Write your note</label>  
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-warning mb-1 btn-lg" asp-route-id="@Model?.IdNote">
+        <button type="submit" class="btn btn-warning mb-1 btn-lg">
         Edit
         </button>
         </div>

@@ -1,5 +1,4 @@
-﻿@using Models
-@model Journal
+﻿@model Models.ViewModels.EditJournalViewModels
 
 
 @{
@@ -14,14 +13,11 @@
 <form method="post">
     <div class="container">
         <input type="hidden" asp-for="IdJournal" />
-        <input type="hidden" asp-for="IdUser" />
-        <input type="hidden" asp-for="CreateDate" />
-        <input type="hidden" asp-for="LastEditDate" />
         
-
+        <span asp-validation-for="Title" class="text-danger"></span>
         <div class="form-floating mb-3">
         <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
-        <label for="titleJournal">Created: @Model?.CreateDate</label>
+            <label for="titleJournal">Write your title</label>
         </div>
 
 

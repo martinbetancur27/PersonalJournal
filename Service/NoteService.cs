@@ -7,6 +7,7 @@ using IService;
 using Data;
 using Models;
 using Microsoft.EntityFrameworkCore;
+using Models.ViewModels;
 
 namespace Service
 {
@@ -20,28 +21,95 @@ namespace Service
         }
 
 
-        public bool AddPost<Post>(Post post, int? idPostRoot) where Post : class
+        public Post? ShowPost<Post>(int? idPost) where Post : class
         {
             try
             {
-                if (typeof(Post).Equals(typeof(Comment)))
+                if (idPost == 0)
                 {
-                    Comment? comment = post as Comment;
+                    return null;
+                }
+                //Note postFromDb = _databaseContext.Notes.Where(x => x.IdNote == idPost).Include(c => c.Comments).FirstOrDefault();
 
-                    if(idPostRoot != null)
+                Note postFromDb = _databaseContext.Notes.FirstOrDefault(x => x.IdNote == idPost);
+
+                if (postFromDb == null)
+                {
+                    return null;
+                }
+
+                ShowNoteViewModel showNote = new ShowNoteViewModel();
+                showNote.IdNote = postFromDb.IdNote;
+                showNote.IdJournal = postFromDb.IdJournal;
+                showNote.Title = postFromDb.Title;
+                showNote.Message = postFromDb.Message;
+                showNote.CreateDate = postFromDb.CreateDate;
+                showNote.LastEditDate = postFromDb.LastEditDate;
+
+                Post? note = showNote as Post;
+
+                return note;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+        public int? AddPost<Post>(Post post, int? idPostRoot) where Post : class
+        {
+            try
+            {
+                if (typeof(Post).Equals(typeof(CreateCommentViewModel)))
+                {
+                    CreateCommentViewModel? commentCreate = post as CreateCommentViewModel;
+
+                    if (idPostRoot != null)
                     {
-                        comment.IdNote = idPostRoot.GetValueOrDefault(); // GetValueOrDefault(); para pasar de int? a int
+                        Comment comment = new Comment();
+                        comment.IdNote = idPostRoot.GetValueOrDefault();
+                        comment.Message = commentCreate.Message;
                         comment.CreateDate = DateTime.Now;
+
                         _databaseContext.Comments.Add(comment);
                         _databaseContext.SaveChanges();
-                        return true;
-                    }                   
+
+                        return comment.IdNote;
+                    }
                 }
-                return false;
+                
+                return 0;
             }
             catch (System.Exception)
             {
-                return false;
+                return 0;
+            }
+        }
+
+        public Post ShowEditPost<Post>(int? idNote) where Post : class
+        {
+            try
+            {
+                Note postFromDb = _databaseContext.Notes.FirstOrDefault(u => u.IdNote == idNote);
+
+                if (postFromDb == null)
+                {
+                    return null;
+                }
+
+                EditNoteViewModel editNote = new EditNoteViewModel();
+                editNote.IdNote = postFromDb.IdNote;
+                editNote.Title = postFromDb.Title;
+                editNote.Message = postFromDb.Message;
+
+                Post note = editNote as Post;
+
+                return note;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -50,11 +118,16 @@ namespace Service
         {
             try
             {
-                
-                if (typeof(Post).Equals(typeof(Note)))
+                if (post.GetType().Equals(typeof(EditNoteViewModel)))
                 {
-                    Note? note = post as Note;
+                    EditNoteViewModel? editNote = post as EditNoteViewModel;
+
+                    Note note = _databaseContext.Notes.Find(editNote.IdNote);
+
+                    note.Title = editNote.Title;
+                    note.Message = editNote.Message;
                     note.LastEditDate = DateTime.Now;
+
                     _databaseContext.Notes.Update(note);
                     _databaseContext.SaveChanges();
                     return true;
@@ -78,8 +151,6 @@ namespace Service
                 {
                     return false;
                 }
-                
-                //DeleteSubPosts(idPost);
                 
                 _databaseContext.Notes.Remove(post);
                 _databaseContext.SaveChanges();
@@ -118,34 +189,6 @@ namespace Service
             {
                 return false;
             }
-        }
-
-
-        public Post? ShowPost<Post>(int? idPost) where Post : class
-        {
-            try
-            {
-                if (idPost == 0)
-                {
-                    return null;
-                }
-                //Note postFromDb = _databaseContext.Notes.Where(x => x.IdNote == idPost).Include(c => c.Comments).FirstOrDefault();
-
-                Note postFromDb = _databaseContext.Notes.FirstOrDefault(x => x.IdNote == idPost);
-                
-                if (postFromDb == null)
-                {
-                    return null;
-                }
-
-                Post? note = postFromDb as Post;
-
-                return note;
-            }
-            catch (Exception)
-            {
-                return null;
-            }  
         }
 
 

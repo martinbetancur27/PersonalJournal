@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Data;
 using Models;
+using Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using IService;
 using Service;
 using System.Collections.Generic;
-
 
 namespace VirtualJournalMVC.Controllers
 {
@@ -46,23 +46,28 @@ namespace VirtualJournalMVC.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateJournal(Journal? journal)
+        public IActionResult CreateJournal(CreateJournalViewModel createJournal)
         {
-            bool response = _journalRoot.Create(journal, _userService.GetUserId());
-            if(response)
-            {
-                
-                return RedirectToAction("Notes", new { idJournal = journal.IdJournal });
+            /*journal.IdUser = _userService.GetUserId();
+            journal.CreateDate = DateTime.Now;
+            journal.LastEditDate = DateTime.Now;*/
+            
+            if(ModelState.IsValid){
+                                
+                int? responseIdJournal = _journalRoot.Create(createJournal, _userService.GetUserId());
+                if(responseIdJournal != 0 && responseIdJournal != null)
+                {
+                    return RedirectToAction("Notes", new { id = responseIdJournal });
+                }
+                return NotFound();
             }
-
-            //return RedirectToAction("Index");
             return View();
         }
 
 
-        public IActionResult DetailsJournal(int id)
+        public IActionResult DetailsJournal(int? id)
         {
-            Journal post = _journal.ShowPost<Journal>(id);
+            DetailsJournalViewModel post = _journal.ShowPost<DetailsJournalViewModel>(id);
             if(post == null)
             {
                 return NotFound();
@@ -71,57 +76,93 @@ namespace VirtualJournalMVC.Controllers
         }
 
 
-        public IActionResult EditJournal(int id)
+        public IActionResult EditJournal(int? id)
         {
-            Journal post = _journal.ShowPost<Journal>(id);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+
+            EditJournalViewModels post = _journal.ShowEditPost<EditJournalViewModels>(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
             return View(post);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditJournal(int IdJournal, Journal journal)
+        public IActionResult EditJournal(EditJournalViewModels editJournal)
         {
-            bool response = _journal.EditPost<Journal>(journal);
-            if(response)
-            {
-                return RedirectToAction("DetailsJournal", new { id = journal.IdJournal });
+            if(ModelState.IsValid){
+                bool response = _journal.EditPost(editJournal);
+                if(response)
+                {
+                    return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
+                }
+                return NotFound();
             }
             return View();
         }
 
-        public IActionResult DeleteJournal(int id)
+        public IActionResult DeleteJournal(int? id)
         {
-            Journal post = _journal.ShowPost<Journal>(id);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+
+            DetailsJournalViewModel post = _journal.ShowPost<DetailsJournalViewModel>(id);
             return View(post);
         }
 
         [HttpPost,ActionName("DeleteJournal")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteJournalPOST(int id)
+        public IActionResult DeleteJournalPOST(int? id)
         {
-            bool postResponse = _journal.DeletePost(id);
-            return RedirectToAction("Index");
-        }
-
-
-        public IActionResult Notes(int id)
-        {
-            if (id != null || id != 0)
-            { 
-                IEnumerable<Note> subPosts = _journal.GetListSubPosts<Note>(id);
-                
-                //@ViewBag.idJournalForNotes = id; // Deberia ser con la variable Session. ViewBag es para pasar info a la vista. No entre controladores.
-                //ViewData es similar viewbag, la diferencia es que viewdata requiere casteo
-                HttpContext.Session.SetInt32("idJournalForNotes", id);
-                return View(subPosts);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
             }
-            return RedirectToAction("Index");
+
+            bool postResponse = _journal.DeletePost(id);
+            if (postResponse)
+            {
+                return RedirectToAction("Index");
+            }
+            return NotFound();
         }
 
-        public IActionResult ShowNote(int id)
+
+        public IActionResult Notes(int? id)
         {
-            Note post = _note.ShowPost<Note>(id);
-            ViewBag.Comments = _note.GetListSubPosts<Comment>(id);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+
+            IEnumerable<Note> subPosts = _journal.GetListSubPosts<Note>(id);
+                
+            //@ViewBag.idJournalForNotes = id; // Deberia ser con la variable Session. ViewBag es para pasar info a la vista. No entre controladores.
+            //ViewData es similar viewbag, la diferencia es que viewdata requiere casteo
+            HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
+            return View(subPosts);
+            
+            
+        }
+
+        public IActionResult ShowNote(int? id)
+        {
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+
+            ShowNoteAndCommentsViewModel post = new ShowNoteAndCommentsViewModel();
+            post.Note = _note.ShowPost<ShowNoteViewModel>(id);
+            post.Comments = _note.GetListSubPosts<Comment>(id);
+
             return View(post);
         }
 
@@ -132,78 +173,126 @@ namespace VirtualJournalMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddNote(Note post)
+        public IActionResult AddNote(CreateNoteViewModel post)
         {
-            int? id = HttpContext.Session.GetInt32("idJournalForNotes");
-            if (id != null && id != 0)
-            { 
-                bool response = _journal.AddPost<Note>(post, id);
-                if(response)
-                    return RedirectToAction("ShowNote", new { id = post.IdNote });
+            if (ModelState.IsValid)
+            {
+                int? id = HttpContext.Session.GetInt32("idJournalForNotes");
+
+                if (id == 0 || id == null)
+                {
+                    return NotFound();
+                }
+
+                int? responseIdNote = _journal.AddPost(post, id);
+                if (responseIdNote != 0 && responseIdNote != null)
+                    return RedirectToAction("ShowNote", new { id = responseIdNote });
+               
             }
             return View();
         }
 
 
-        public IActionResult EditNote(int id)
+        public IActionResult EditNote(int? id)
         {
-            Note post = _note.ShowPost<Note>(id);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
 
+            EditNoteViewModel post = _note.ShowEditPost<EditNoteViewModel>(id);
+
+            if(post == null)
+            {
+                return NotFound();
+            }
             return View(post);
+            
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditNote(Note post, int id)
+        public IActionResult EditNote(EditNoteViewModel editNote)
         {
-            bool response = _note.EditPost(post);
-            if (response)
-            {
-                return RedirectToAction("ShowNote", new { id = post.IdNote });
+
+            if (ModelState.IsValid){
+                bool response = _note.EditPost(editNote);
+                if (response)
+                {
+                    return RedirectToAction("ShowNote", new { id = editNote.IdNote });
+                }
+                return NotFound();
             }
+
             return View();
         }
 
 
-        public IActionResult DeleteNote(int id)
+        public IActionResult DeleteNote(int? id)
         {
-            Note post = _note.ShowPost<Note>(id);
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+
+            ShowNoteViewModel post = _note.ShowPost<ShowNoteViewModel>(id);
             return View(post);
         }
 
         [HttpPost,ActionName("DeleteNote")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteNotePOST(int id)
+        public IActionResult DeleteNotePOST(int? id)
         {
-            bool response = _note.DeletePost(id);
-            if(response)
+            if (id == 0 || id == null)
             {
-                return RedirectToAction("Notes");
+                return NotFound();
             }
-            return View();
+
+            bool response = _note.DeletePost(id);
+
+            if (response)
+            {
+                int? idJournal = HttpContext.Session.GetInt32("idJournalForNotes");
+                return RedirectToAction("Notes", new { id = idJournal });
+            }
+            return NotFound();
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddComment(string commentText, int id)
+        public IActionResult AddComment(string commentText, int? idNote)
         {
-            Comment post = new Comment();
-            post.Message = commentText;
+            if (idNote == null || idNote == 0)
+            {
+                return NotFound();
+            }
+
+            if (commentText != null)
+            { 
+                
+                CreateCommentViewModel post = new CreateCommentViewModel();
+                post.Message = commentText;
             
-            bool postResponse = _note.AddPost(post, id);
-                       
-            return RedirectToAction("ShowNote", new { id = post.IdNote });
-            
+                int? postResponse = _note.AddPost(post, idNote);
+            }
+            return RedirectToAction("ShowNote", new { id = idNote });
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteComment(int id, int idNote)
+        public IActionResult DeleteComment(int? id, int? idNote) 
         { 
+            if(id == null || id == 0 || idNote == null || idNote == 0)
+            {
+                return NotFound();
+            }
+
             bool postResponse = _comment.DeletePost(id);
             return RedirectToAction("ShowNote", new { id = idNote });
+            
         }
     }
 }

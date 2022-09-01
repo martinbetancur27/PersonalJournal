@@ -1,39 +1,38 @@
-﻿@using Models
-@model Note
+﻿@model Models.ViewModels.ShowNoteAndCommentsViewModel
 
 
 @{
-    ViewData["Title"] = @Model?.Title;
+    ViewData["Title"] = @Model?.Note.Title;
 }
 
 <div class="container">
     <h2>Note</h2>
     <div class="badge bg-secondary text-wrap">
-        <label>Created: @Model?.CreateDate</label>
+        <label>Created: @Model?.Note.CreateDate</label>
     </div>
 </div>
 
 <section class="container">
 
-    <h3 class="fw-bolder mb-3 text-secondary">@Model?.Title</h3>
+    <h3 class="fw-bolder mb-3 text-secondary">@Model?.Note.Title</h3>
 
     <div class="form-floating form-outline mb-2">
-        <textarea asp-for="Message" readonly id="textAreaNoteStatic" class="form-control bg-white" rows="18" style="height: 32rem;"></textarea>
-        <label for="textAreaNoteStatic">Modified: @Model?.LastEditDate</label>
+        <textarea asp-for="Note.Message" readonly id="textAreaNoteStatic" class="form-control bg-white" rows="18" style="height: 32rem;"></textarea>
+        <label for="textAreaNoteStatic">Modified: @Model?.Note.LastEditDate</label>
     </div>
 
     <div class="d-grid gap-2">
-        <a class="btn btn-light mb-1 btn-lg" asp-controller="Journal" asp-action="EditNote" asp-route-id="@Model?.IdNote">
+        <a class="btn btn-light mb-1 btn-lg" asp-controller="Journal" asp-action="EditNote" asp-route-id="@Model?.Note.IdNote">
             Edit
         </a>
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-outline-danger btn-sm"  asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@Model?.IdNote">Delete</a>
+        <a class="btn btn-outline-danger btn-sm"  asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@Model?.Note.IdNote">Delete</a>
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-outline-secundary btn-sm"  asp-controller="Journal" asp-action="Notes" asp-route-id="@Model?.IdJournal">Back</a>
+        <a class="btn btn-outline-secundary btn-sm"  asp-controller="Journal" asp-action="Notes" asp-route-id="@Model?.Note.IdJournal">Back</a>
     </div>
 </section>
 
@@ -43,19 +42,19 @@
     
     <form method="post" >
         <div class="form-floating">
-            <textarea name="commentText" id="commentText" maxlength="800" class="form-control" style="height: 6.25rem;"></textarea>
+            <textarea name="commentText" id="commentText" maxlength="800" class="form-control" style="height: 6.25rem;" required></textarea>
             <label for="commentText">Write Comment</label>
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit"  class="btn btn-primary mb-1 btn-sm" asp-controller="Journal" asp-action="AddComment" asp-route-id="@Model?.IdNote">Send</button>
+            <button type="submit"  class="btn btn-primary mb-1 btn-sm" asp-controller="Journal" asp-action="AddComment" asp-route-idNote="@Model?.Note.IdNote">Send</button>
         </div>
     </form>              
 
     <div class="container">
-        @if(Enumerable.Any(ViewBag.Comments))
+        @if(Enumerable.Any(@Model?.Comments))
         {
-        foreach (var post in ViewBag.Comments)
+        foreach (var post in @Model?.Comments)
         {
             <form method="post">
             <div class="form-floating">
@@ -64,7 +63,7 @@
             </div>
             
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Journal" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.IdNote">Delete</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Journal" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.Note.IdNote">Delete</button>
             </div>
             </form>
         }

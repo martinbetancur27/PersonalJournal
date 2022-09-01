@@ -1,5 +1,4 @@
-﻿@using Models
-@model Journal
+﻿@model Models.ViewModels.CreateJournalViewModel
 
 @{
 }
@@ -10,12 +9,13 @@
 
 <form method="post">
     <div class="container">
-
+        
         <div class="form-floating mb-3">
-        <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+            <input asp-for="Title" id= "titleJournal" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+            <span asp-validation-for="Title" class="text-danger"></span>
         <label for="titleJournal">Write your title</label>
         </div>
-
+        
 
         <div class="form-floating">
             <textarea asp-for="Message" maxlength="1200" class="form-control" id="floatingTextarea2" style="height: 14rem;"></textarea>

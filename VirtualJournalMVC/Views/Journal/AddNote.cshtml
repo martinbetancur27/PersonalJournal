@@ -1,5 +1,5 @@
-﻿@using Models
-@model Note
+﻿@model Models.ViewModels.CreateNoteViewModel
+
 
 @{
     ViewData["Title"] = "Add note";
@@ -12,11 +12,13 @@
 <form method="post">
     <div class="container">
 
+        <span asp-validation-for="Title" class="text-danger"></span>
         <div class="form-floating mb-3">
         <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
         <label for="titleNote">Write your title</label>
         </div>
 
+        <span asp-validation-for="Message" class="text-danger"></span>
         <div class="form-floating form-outline mb-2">
         <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 32rem;"></textarea>
         <label for="textAreaNote">Write your note</label>  

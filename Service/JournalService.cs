@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using IService;
 using Data;
 using Models;
+using Models.ViewModels;
 
 namespace Service
 {
@@ -22,28 +23,69 @@ namespace Service
         }
 
 
-        public bool Create<Post>(Post post, string idUser) where Post : class
+        public int? Create<Post>(Post post, string idUser) where Post : class
         {
             try
             {
-                if (typeof(Post).Equals(typeof(Journal)))
+                /*if (typeof(Post).Equals(typeof(Journal)))
                 {
                     Journal? journal = post as Journal;
 
+                    _databaseContext.Journals.Add(journal); // Añadir IdUser como foreign key
+                    _databaseContext.SaveChanges();
+                
+                    return true;
+                }*/
+                if (post.GetType().Equals(typeof(CreateJournalViewModel)))
+                {
+                    CreateJournalViewModel? createJournal = post as CreateJournalViewModel;
+
+                    Journal journal = new Journal();
                     journal.IdUser = idUser;
+                    journal.Title = createJournal.Title;
+                    journal.Message = createJournal.Message;
                     journal.CreateDate = DateTime.Now;
                     journal.LastEditDate = DateTime.Now;
 
                     _databaseContext.Journals.Add(journal); // Añadir IdUser como foreign key
                     _databaseContext.SaveChanges();
 
-                    return true;
+                    return journal.IdJournal;
                 }
-            return false;
+            return 0;
             }
             catch (System.Exception)
             {
-                return false;
+                return 0;
+            }
+        }
+
+
+        public Post ShowPost<Post>(int? idJournal) where Post : class
+        {
+            try
+            {
+                Journal postFromDb = _databaseContext.Journals.FirstOrDefault(u => u.IdJournal == idJournal);
+
+                if (postFromDb == null)
+                {
+                    return null;
+                }
+
+                DetailsJournalViewModel detailsJournal = new DetailsJournalViewModel();
+                detailsJournal.IdJournal = postFromDb.IdJournal;
+                detailsJournal.Title = postFromDb.Title;
+                detailsJournal.Message = postFromDb.Message;
+                detailsJournal.CreateDate = postFromDb.CreateDate;
+                detailsJournal.LastEditDate = postFromDb.LastEditDate;
+
+                Post journal = detailsJournal as Post;
+
+                return journal;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -75,33 +117,63 @@ namespace Service
         }
 
 
-        public bool AddPost<Post>(Post post, int? idPostRoot) where Post : class
+        public int? AddPost<Post>(Post post, int? idPostRoot) where Post : class
         {
             try
             {
-                if (typeof(Post).Equals(typeof(Note)))
+                if (typeof(Post).Equals(typeof(CreateNoteViewModel)))
                 {
-                    Note? note = post as Note;
+                    CreateNoteViewModel? createNote = post as CreateNoteViewModel;
                     
                     if(idPostRoot != null)
                     {
-                        note.IdJournal = idPostRoot.GetValueOrDefault();
-                        note.CreateDate = DateTime.Now;
-                        note.LastEditDate = DateTime.Now;
+                        Note newNote = new Note();
+                        newNote.IdJournal = idPostRoot.GetValueOrDefault();
+                        newNote.Title = createNote.Title;
+                        newNote.Message = createNote.Message;
+                        newNote.CreateDate = DateTime.Now;
+                        newNote.LastEditDate = DateTime.Now;
 
-                        _databaseContext.Notes.Add(note); // Añadir IdUser como foreign key
+                        _databaseContext.Notes.Add(newNote);
                         _databaseContext.SaveChanges();
                         
-                        return true;
+                        return newNote.IdNote;
                     }
                 }
                 
-                return false;
+                return 0;
             
             }
             catch (System.Exception)
             {
-                return false;
+                return 0;
+            }
+        }
+
+
+        public Post ShowEditPost<Post>(int? idJournal) where Post : class
+        {
+            try
+            {
+                Journal postFromDb = _databaseContext.Journals.FirstOrDefault(u => u.IdJournal == idJournal);
+
+                if (postFromDb == null)
+                {
+                    return null;
+                }
+
+                EditJournalViewModels editJournal = new EditJournalViewModels();
+                editJournal.IdJournal = postFromDb.IdJournal;
+                editJournal.Title = postFromDb.Title;
+                editJournal.Message = postFromDb.Message;
+
+                Post journal = editJournal as Post;
+
+                return journal;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -109,19 +181,25 @@ namespace Service
         public bool EditPost<Post>(Post post) where Post : class
         {
             try
-            {                                
-                if (typeof(Post).Equals(typeof(Journal)))
-                    {
-                                                                        
-                        Journal? journal = post as Journal;
-                        
-                        _databaseContext.Journals.Update(journal);
-                        _databaseContext.SaveChanges();
-                        return true;
-                    }
+            {
+                if (post.GetType().Equals(typeof(EditJournalViewModels)))
+                {
+
+                    EditJournalViewModels? editJournal = post as EditJournalViewModels;
+
+                    Journal journal = _databaseContext.Journals.Find(editJournal.IdJournal);
+                    journal.Title = editJournal.Title;
+                    journal.Message = editJournal.Message;
+                    journal.LastEditDate = DateTime.Now;
+
+                    _databaseContext.Journals.Update(journal);
+                    _databaseContext.SaveChanges();
+                    return true;
+                }
+
                 return false;
-                
-                
+
+
             }
             catch (System.Exception)
             {
@@ -179,27 +257,6 @@ namespace Service
             }
         }
 
-
-        public Post ShowPost<Post>(int? idJournal) where Post : class
-        {
-            try
-            {
-                Journal postFromDb = _databaseContext.Journals.FirstOrDefault(u => u.IdJournal == idJournal);
-                
-                if (postFromDb == null)
-                {
-                    return null;
-                }
-
-                Post journal = postFromDb as Post;
-
-                return journal; 
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
 
         public IEnumerable<Post>? GetListSubPosts<Post>(int? idRoot) where Post : class
         {

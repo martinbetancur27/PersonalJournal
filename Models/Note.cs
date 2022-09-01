@@ -27,7 +27,7 @@ namespace Models
         [ForeignKey("IdJournal")]
         public Journal Journal { get; set; }
 
-        public List<Comment>? Comments { get; set; }
+        public IEnumerable<Comment>? Comments { get; set; }
 
     }
 }

@@ -8,7 +8,7 @@ namespace IService
 {
     public interface IPostRoot: IPostComposite
     {
-        public bool Create<Post>(Post post, string idUser) where Post : class;
+        public int? Create<Post>(Post post, string idUser) where Post : class;
         public IEnumerable<Post>? GetList<Post>(string idUser) where Post : class;
     }
 }
