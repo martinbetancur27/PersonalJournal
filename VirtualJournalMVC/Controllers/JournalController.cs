@@ -15,15 +15,17 @@ namespace VirtualJournalMVC.Controllers
     public class JournalController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuthorizeOwner _authorizeOwner;
         private IPostRoot? _journalRoot;
         private IPostComposite? _journal;
         private IPostComposite? _note;
         private IPostLeaf? _comment;
 
-        public JournalController(IUserService userService, IEnumerable<IPostComposite> postComposite, IEnumerable<IPostLeaf> postLeaf, IEnumerable<IPostRoot> postRoot)
+        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IEnumerable<IPostComposite> postComposite, IEnumerable<IPostLeaf> postLeaf, IEnumerable<IPostRoot> postRoot)
         {
             
             _userService = userService;
+            _authorizeOwner = authorizeOwner;
 
             this._journalRoot = postRoot.SingleOrDefault(s => s.GetType() == typeof(JournalService));
             this._journal = postComposite.SingleOrDefault(s => s.GetType() == typeof(JournalService));
@@ -67,12 +69,21 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult DetailsJournal(int? id)
         {
+
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            {
+                return NotFound();
+            }
+
+             
             DetailsJournalViewModel post = _journal.ShowPost<DetailsJournalViewModel>(id);
+
             if(post == null)
             {
                 return NotFound();
             }
             return View(post);
+            
         }
 
 
@@ -83,12 +94,18 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            EditJournalViewModels post = _journal.ShowEditPost<EditJournalViewModels>(id);
-            if (post == null)
+            if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                EditJournalViewModels post = _journal.ShowEditPost<EditJournalViewModels>(id);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+                return View(post);
             }
-            return View(post);
+
+            return NotFound();
+
         }
 
         [HttpPost]
@@ -96,19 +113,22 @@ namespace VirtualJournalMVC.Controllers
         public IActionResult EditJournal(EditJournalViewModels editJournal)
         {
             if(ModelState.IsValid){
-                bool response = _journal.EditPost(editJournal);
-                if(response)
+                if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetUserId()))
                 {
-                    return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
+                    bool response = _journal.EditPost(editJournal);
+                    if (response)
+                    {
+                        return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
+                    }
+                    return NotFound();
                 }
-                return NotFound();
             }
             return View();
         }
 
         public IActionResult DeleteJournal(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -121,7 +141,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteJournalPOST(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -137,7 +157,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult Notes(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -146,15 +166,17 @@ namespace VirtualJournalMVC.Controllers
                 
             //@ViewBag.idJournalForNotes = id; // Deberia ser con la variable Session. ViewBag es para pasar info a la vista. No entre controladores.
             //ViewData es similar viewbag, la diferencia es que viewdata requiere casteo
-            HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
-            return View(subPosts);
-            
+            if(subPosts != null){
+                HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
+                return View(subPosts);
+            }
+            return NotFound();
             
         }
 
         public IActionResult ShowNote(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -179,7 +201,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 int? id = HttpContext.Session.GetInt32("idJournalForNotes");
 
-                if (id == 0 || id == null)
+                if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
                 {
                     return NotFound();
                 }
@@ -195,7 +217,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult EditNote(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -216,11 +238,15 @@ namespace VirtualJournalMVC.Controllers
         public IActionResult EditNote(EditNoteViewModel editNote)
         {
 
-            if (ModelState.IsValid){
-                bool response = _note.EditPost(editNote);
-                if (response)
-                {
-                    return RedirectToAction("ShowNote", new { id = editNote.IdNote });
+            if (ModelState.IsValid)
+            {
+                if(_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetUserId()))
+                { 
+                    bool response = _note.EditPost(editNote);
+                    if (response)
+                    {
+                        return RedirectToAction("ShowNote", new { id = editNote.IdNote });
+                    }
                 }
                 return NotFound();
             }
@@ -231,7 +257,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult DeleteNote(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -244,7 +270,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteNotePOST(int? id)
         {
-            if (id == 0 || id == null)
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -264,7 +290,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddComment(string commentText, int? idNote)
         {
-            if (idNote == null || idNote == 0)
+            if (idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }
@@ -285,7 +311,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteComment(int? id, int? idNote) 
         { 
-            if(id == null || id == 0 || idNote == null || idNote == 0)
+            if(id == null || id == 0 || idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
             {
                 return NotFound();
             }

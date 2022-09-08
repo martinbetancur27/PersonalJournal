@@ -34,6 +34,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUserService, UserManagerService>();
+builder.Services.AddScoped<IAuthorizeOwner, AuthorizeOwner>();
+
 
 builder.Services.AddScoped<IPostRoot, JournalService>();
 builder.Services.AddScoped<IPostComposite, JournalService>();
