@@ -10,8 +10,8 @@ namespace Models
 {
     public class Comment
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdComment { get; set; }
 
         public DateTime CreateDate { get; set; }
@@ -19,7 +19,7 @@ namespace Models
         public string Message { get; set; }
 
         public int IdNote { get; set; }
-        [ForeignKey("IdNote")]
+        //[ForeignKey("IdNote")]
         public Note Note { get; set; }
 
 

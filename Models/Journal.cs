@@ -10,8 +10,8 @@ namespace Models
 {
     public class Journal
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdJournal { get; set; }
 
         public string Title { get; set; }
@@ -24,10 +24,10 @@ namespace Models
 
 
         public string IdUser { get; set; }
-        [ForeignKey("IdUser")]
+        //[ForeignKey("IdUser")]
         public ApplicationUser AspNetUsers { get; set; }
 
-        public List<Note>? Notes { get; set; }
+        public ICollection<Note>? Notes { get; set; }
     }
 
 }

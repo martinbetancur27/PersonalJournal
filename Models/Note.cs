@@ -10,8 +10,8 @@ namespace Models
 {
     public class Note
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdNote { get; set; }
 
         public string Title { get; set; }
@@ -22,12 +22,11 @@ namespace Models
 
         public string Message { get; set; }
 
-
         public int IdJournal { get; set; }
-        [ForeignKey("IdJournal")]
+        //[ForeignKey("IdJournal")]
         public Journal Journal { get; set; }
 
-        public IEnumerable<Comment>? Comments { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
 
     }
 }
