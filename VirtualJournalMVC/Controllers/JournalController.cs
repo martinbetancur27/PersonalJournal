@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using IService;
 using Service;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace VirtualJournalMVC.Controllers
 {
@@ -16,28 +17,27 @@ namespace VirtualJournalMVC.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAuthorizeOwner _authorizeOwner;
-        private IPostRoot? _journalRoot;
-        private IPostComposite? _journal;
-        private IPostComposite? _note;
-        private IPostLeaf? _comment;
+        private IJournal _journal;
+        private INote _note;
+        private IComment _comment;
 
-        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IEnumerable<IPostComposite> postComposite, IEnumerable<IPostLeaf> postLeaf, IEnumerable<IPostRoot> postRoot)
+
+        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IJournal journal, INote note, IComment comment)
         {
-            
             _userService = userService;
             _authorizeOwner = authorizeOwner;
 
-            this._journalRoot = postRoot.SingleOrDefault(s => s.GetType() == typeof(JournalService));
-            this._journal = postComposite.SingleOrDefault(s => s.GetType() == typeof(JournalService));
-            this._note = postComposite.SingleOrDefault(s => s.GetType() == typeof(NoteService));
-            this._comment = postLeaf.SingleOrDefault(s => s.GetType() == typeof(CommentService));
+            _journal = journal;
+            _note = note;
+            _comment = comment;
         }
+
 
         public IActionResult Index()
         {
             string idUser = _userService.GetUserId();
 
-            IEnumerable<Journal> journalsIndex = _journalRoot.GetList<Journal>(idUser); //Parameter 0 is select idUser as Root
+            IEnumerable<Journal>? journalsIndex = _journal.GetJournals(idUser); //Parameter 0 is select idUser as Root
             return View(journalsIndex);
         }
 
@@ -46,20 +46,28 @@ namespace VirtualJournalMVC.Controllers
             return View();
         }
         
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateJournal(CreateJournalViewModel createJournal)
-        {
-            /*journal.IdUser = _userService.GetUserId();
-            journal.CreateDate = DateTime.Now;
-            journal.LastEditDate = DateTime.Now;*/
-            
+        {           
             if(ModelState.IsValid){
-                                
-                int? responseIdJournal = _journalRoot.Create(createJournal, _userService.GetUserId());
-                if(responseIdJournal != 0 && responseIdJournal != null)
+
+                Journal newJournal = new Journal
                 {
-                    return RedirectToAction("Notes", new { id = responseIdJournal });
+                    IdUser = _userService.GetUserId(),
+                    Title = createJournal.Title,
+                    Message = createJournal.Message,
+                    CreateDate = DateTime.Now,
+                    LastEditDate = DateTime.Now
+                };
+
+                bool responseIdJournal = _journal.Add(newJournal);
+
+                if(responseIdJournal)
+                {
+                    //return RedirectToAction("Notes", new { id = 1 });
+                    return RedirectToAction("Index");
                 }
                 return NotFound();
             }
@@ -75,15 +83,26 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-             
-            DetailsJournalViewModel post = _journal.ShowPost<DetailsJournalViewModel>(id);
-
-            if(post == null)
+            Journal? postFromDb = _journal.Get(id.Value);
+            if (postFromDb == null)
             {
                 return NotFound();
             }
-            return View(post);
-            
+
+            DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
+            {
+                IdJournal = postFromDb.IdJournal,
+                Title = postFromDb.Title,
+                Message = postFromDb.Message,
+                CreateDate = postFromDb.CreateDate,
+                LastEditDate = postFromDb.LastEditDate
+            };
+
+            if(postFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(detailJournal);
         }
 
 
@@ -96,26 +115,49 @@ namespace VirtualJournalMVC.Controllers
 
             if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                EditJournalViewModels post = _journal.ShowEditPost<EditJournalViewModels>(id);
-                if (post == null)
+                Journal? postFromDb = _journal.Get(id);
+
+                if(postFromDb == null)
                 {
                     return NotFound();
                 }
-                return View(post);
+
+                EditJournalViewModels editJournalViewModel = new EditJournalViewModels
+                {
+                    IdJournal = postFromDb.IdJournal,
+                    Title = postFromDb.Title,
+                    Message = postFromDb.Message
+                };
+
+                if (postFromDb == null)
+                {
+                    return NotFound();
+                }
+                return View(editJournalViewModel);
             }
-
             return NotFound();
-
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditJournal(EditJournalViewModels editJournal)
         {
-            if(ModelState.IsValid){
+            if(ModelState.IsValid)
+            {
                 if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetUserId()))
                 {
-                    bool response = _journal.EditPost(editJournal);
+                    Journal? postFromDb = _journal.Get(editJournal.IdJournal);
+                    if (postFromDb == null)
+                    {
+                        return NotFound();
+                    }
+
+                    postFromDb.Title = editJournal.Title;
+                    postFromDb.Message = editJournal.Message;
+                    postFromDb.LastEditDate = DateTime.Now;
+
+                    bool response = _journal.Edit(postFromDb);
                     if (response)
                     {
                         return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
@@ -126,6 +168,7 @@ namespace VirtualJournalMVC.Controllers
             return View();
         }
 
+
         public IActionResult DeleteJournal(int? id)
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
@@ -133,9 +176,28 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            DetailsJournalViewModel post = _journal.ShowPost<DetailsJournalViewModel>(id);
-            return View(post);
+            Journal? postFromDb = _journal.Get(id.Value);
+            if (postFromDb == null)
+            {
+                return NotFound();
+            }
+
+            DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
+            {
+                IdJournal = postFromDb.IdJournal,
+                Title = postFromDb.Title,
+                Message = postFromDb.Message,
+                CreateDate = postFromDb.CreateDate,
+                LastEditDate = postFromDb.LastEditDate
+            };
+
+            if (postFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(detailJournal);
         }
+
 
         [HttpPost,ActionName("DeleteJournal")]
         [ValidateAntiForgeryToken]
@@ -146,7 +208,7 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            bool postResponse = _journal.DeletePost(id);
+            bool postResponse = _journal.Delete(id);
             if (postResponse)
             {
                 return RedirectToAction("Index");
@@ -162,7 +224,7 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            IEnumerable<Note> subPosts = _journal.GetListSubPosts<Note>(id);
+            IEnumerable<Note> subPosts = _journal.GetNotes(id);
                 
             //@ViewBag.idJournalForNotes = id; // Deberia ser con la variable Session. ViewBag es para pasar info a la vista. No entre controladores.
             //ViewData es similar viewbag, la diferencia es que viewdata requiere casteo
@@ -181,17 +243,35 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
+            Note? postFromDb = _note.Get(id);
+            if(postFromDb == null)
+            {
+                return NotFound();
+            }
+
+            ShowNoteViewModel noteViewModel = new ShowNoteViewModel
+            {
+                IdNote = postFromDb.IdNote,
+                IdJournal = postFromDb.IdJournal,
+                Title = postFromDb.Title,
+                Message = postFromDb.Message,
+                CreateDate = postFromDb.CreateDate,
+                LastEditDate = postFromDb.LastEditDate
+            };
+
             ShowNoteAndCommentsViewModel post = new ShowNoteAndCommentsViewModel();
-            post.Note = _note.ShowPost<ShowNoteViewModel>(id);
-            post.Comments = _note.GetListSubPosts<Comment>(id);
+            post.Note = noteViewModel;
+            post.Comments = _note.GetComments(id);
 
             return View(post);
         }
+
 
         public IActionResult AddNote()
         {
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -201,15 +281,27 @@ namespace VirtualJournalMVC.Controllers
             {
                 int? id = HttpContext.Session.GetInt32("idJournalForNotes");
 
-                if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
+                if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
                 {
                     return NotFound();
                 }
 
-                int? responseIdNote = _journal.AddPost(post, id);
-                if (responseIdNote != 0 && responseIdNote != null)
-                    return RedirectToAction("ShowNote", new { id = responseIdNote });
-               
+                Note newNote = new Note
+                {
+                    IdJournal = id.Value,
+                    Title = post.Title,
+                    Message = post.Message,
+                    CreateDate = DateTime.Now,
+                    LastEditDate = DateTime.Now
+                };
+
+
+                bool responseIdNote = _journal.Add(newNote);
+                if (responseIdNote)
+                {
+                    //return RedirectToAction("ShowNote", new { id = responseIdNote });
+                    return RedirectToAction("Notes", new { id = id });
+                }
             }
             return View();
         }
@@ -222,14 +314,20 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            EditNoteViewModel post = _note.ShowEditPost<EditNoteViewModel>(id);
-
-            if(post == null)
+            Note? postFromDb = _note.Get(id);
+            if (postFromDb == null)
             {
                 return NotFound();
             }
-            return View(post);
-            
+
+            EditNoteViewModel editNoteViewModel = new EditNoteViewModel
+            {
+                IdNote = id.Value,
+                Title = postFromDb.Title,
+                Message = postFromDb.Message
+
+            };
+            return View(editNoteViewModel);
         }
 
 
@@ -237,12 +335,21 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditNote(EditNoteViewModel editNote)
         {
-
             if (ModelState.IsValid)
             {
                 if(_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetUserId()))
-                { 
-                    bool response = _note.EditPost(editNote);
+                {
+                    Note? postFromDb = _note.Get(editNote.IdNote);
+                    if (postFromDb == null)
+                    {
+                        return NotFound();
+                    }
+
+                    postFromDb.Title = editNote.Title;
+                    postFromDb.Message = editNote.Message;
+                    postFromDb.LastEditDate = DateTime.Now;
+
+                    bool response = _note.Edit(postFromDb);
                     if (response)
                     {
                         return RedirectToAction("ShowNote", new { id = editNote.IdNote });
@@ -262,9 +369,29 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            ShowNoteViewModel post = _note.ShowPost<ShowNoteViewModel>(id);
-            return View(post);
+            Note? postFromDb = _note.Get(id);
+            if (postFromDb == null)
+            {
+                return NotFound();
+            }
+
+            ShowNoteViewModel showNoteViewModel = new ShowNoteViewModel
+            {
+                IdNote = postFromDb.IdNote,
+                IdJournal = postFromDb.IdJournal,
+                Title = postFromDb.Title,
+                Message = postFromDb.Message,
+                CreateDate = postFromDb.CreateDate,
+                LastEditDate = postFromDb.LastEditDate
+            };
+
+            if (postFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(showNoteViewModel);
         }
+
 
         [HttpPost,ActionName("DeleteNote")]
         [ValidateAntiForgeryToken]
@@ -275,7 +402,7 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            bool response = _note.DeletePost(id);
+            bool response = _note.Delete(id);
 
             if (response)
             {
@@ -295,17 +422,17 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            if (commentText != null)
-            { 
-                
-                CreateCommentViewModel post = new CreateCommentViewModel();
-                post.Message = commentText;
-            
-                int? postResponse = _note.AddPost(post, idNote);
-            }
-            return RedirectToAction("ShowNote", new { id = idNote });
+            Comment newComment = new Comment
+            {
+                IdNote = idNote.Value,
+                Message = commentText,
+                CreateDate = DateTime.Now
+            };
 
+            _note.Add(newComment);
+            return RedirectToAction("ShowNote", new { id = idNote });
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -316,9 +443,8 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            bool postResponse = _comment.DeletePost(id);
+            bool postResponse = _comment.Delete(id);
             return RedirectToAction("ShowNote", new { id = idNote });
-            
         }
     }
 }

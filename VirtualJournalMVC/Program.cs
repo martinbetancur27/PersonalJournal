@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Data;
-using Microsoft.AspNetCore.Identity;
 using Models;
 using Service;
 using IService;
@@ -37,10 +36,9 @@ builder.Services.AddScoped<IUserService, UserManagerService>();
 builder.Services.AddScoped<IAuthorizeOwner, AuthorizeOwner>();
 
 
-builder.Services.AddScoped<IPostRoot, JournalService>();
-builder.Services.AddScoped<IPostComposite, JournalService>();
-builder.Services.AddScoped<IPostComposite, NoteService>();
-builder.Services.AddScoped<IPostLeaf, CommentService>();
+builder.Services.AddScoped<IJournal, JournalService>();
+builder.Services.AddScoped<INote, NoteService>();
+builder.Services.AddScoped<IComment, CommentService>();
 
 
 builder.Services.AddDistributedMemoryCache();

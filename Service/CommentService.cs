@@ -9,36 +9,11 @@ using Models;
 
 namespace Service
 {
-    public class CommentService : IPostLeaf
+    public class CommentService : LeafRepository<Comment>, IComment
     {
-        private readonly ApplicationDbContext _databaseContext;
         
-        
-        public CommentService(ApplicationDbContext db)
+        public CommentService(ApplicationDbContext db) : base(db)
         {
-            _databaseContext = db;
-        }
-
-
-        public bool DeletePost(int? idPost)
-        {
-            try
-            {
-                var post = _databaseContext.Comments.Find(idPost);
-                if (post == null)
-                {
-                    return false;
-                }
-
-                _databaseContext.Comments.Remove(post);
-                _databaseContext.SaveChanges();
-                
-                return true;
-            }
-            catch (System.Exception)
-            {
-                return false;
-            }
         }
     }
 }
