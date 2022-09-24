@@ -22,6 +22,19 @@ namespace Service
             _databaseContext = db;
         }
 
+        public bool CreateJournal(Journal journal)
+        {
+            try
+            {
+                _databaseContext.Journals.Add(journal);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<Journal>? GetJournals(string idUser)
         {
             return _databaseContext.Journals.Where(x => x.IdUser == idUser).OrderByDescending(d => d.CreateDate);

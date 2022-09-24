@@ -10,7 +10,7 @@ namespace IService
 {
     public interface IJournal: ICompositeRepository<Journal>
     {
-        
+        public bool CreateJournal(Journal journal);
         public IEnumerable<Journal>? GetJournals(string idUser);
         public IEnumerable<Note> GetNotes(int? idPost);
     }

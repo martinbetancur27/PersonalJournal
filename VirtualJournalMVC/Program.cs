@@ -38,7 +38,6 @@ builder.Services.AddScoped<IAuthorizeOwner, AuthorizeOwner>();
 
 builder.Services.AddScoped<IJournal, JournalService>();
 builder.Services.AddScoped<INote, NoteService>();
-builder.Services.AddScoped<IComment, CommentService>();
 
 
 builder.Services.AddDistributedMemoryCache();

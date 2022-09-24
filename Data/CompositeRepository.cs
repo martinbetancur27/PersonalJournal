@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -18,20 +19,19 @@ namespace Data
             _databaseContext = db;
         }
 
-        public bool Add<X>(X post) where X : class
+
+        public T? Get(int? id)
         {
             try
             {
-                _databaseContext.Set<X>().Add(post); // Añadir IdUser como foreign key
-                _databaseContext.SaveChanges();
-
-                return true;
+                return _databaseContext.Set<T>().Find(id);
             }
             catch (System.Exception)
             {
-                return false;
+                return null;
             }
         }
+
 
         public bool Delete(int? id)
         {
@@ -54,11 +54,12 @@ namespace Data
             }
         }
 
-        public bool Edit(T post)
+
+        public bool Edit(T entity)
         {
             try
             {
-                _databaseContext.Set<T>().Update(post);
+                _databaseContext.Set<T>().Update(entity);
                 _databaseContext.SaveChanges();
                 return true;
             }
@@ -68,15 +69,56 @@ namespace Data
             }
         }
 
-        public T? Get(int? id)
+
+        public bool AddSub<X>(X subEntity) where X : class
         {
             try
             {
-                return _databaseContext.Set<T>().Find(id);
+                _databaseContext.Set<X>().Add(subEntity); // Añadir IdUser como foreign key
+                _databaseContext.SaveChanges();
+
+                return true;
             }
             catch (System.Exception)
             {
-                return null;
+                return false;
+            }
+        }
+
+
+        public bool DeleteSub<X>(int? id) where X : class
+        {
+            try
+            {
+                var subEntity = _databaseContext.Set<X>().Find(id);
+                if (subEntity == null)
+                {
+                    return false;
+                }
+
+                _databaseContext.Set<X>().Remove(subEntity);
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+        }
+
+
+        public bool EditSub<X>(X subEntity) where X : class
+        {
+            try
+            {
+                _databaseContext.Set<X>().Update(subEntity);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
             }
         }
     }

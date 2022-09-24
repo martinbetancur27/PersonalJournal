@@ -19,17 +19,15 @@ namespace VirtualJournalMVC.Controllers
         private readonly IAuthorizeOwner _authorizeOwner;
         private IJournal _journal;
         private INote _note;
-        private IComment _comment;
 
 
-        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IJournal journal, INote note, IComment comment)
+        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IJournal journal, INote note)
         {
             _userService = userService;
             _authorizeOwner = authorizeOwner;
 
             _journal = journal;
             _note = note;
-            _comment = comment;
         }
 
 
@@ -40,6 +38,7 @@ namespace VirtualJournalMVC.Controllers
             IEnumerable<Journal>? journalsIndex = _journal.GetJournals(idUser); //Parameter 0 is select idUser as Root
             return View(journalsIndex);
         }
+
 
         public IActionResult CreateJournal()
         {
@@ -62,7 +61,7 @@ namespace VirtualJournalMVC.Controllers
                     LastEditDate = DateTime.Now
                 };
 
-                bool responseIdJournal = _journal.Add(newJournal);
+                bool responseIdJournal = _journal.CreateJournal(newJournal);
 
                 if(responseIdJournal)
                 {
@@ -296,7 +295,7 @@ namespace VirtualJournalMVC.Controllers
                 };
 
 
-                bool responseIdNote = _journal.Add(newNote);
+                bool responseIdNote = _journal.AddSub(newNote);
                 if (responseIdNote)
                 {
                     //return RedirectToAction("ShowNote", new { id = responseIdNote });
@@ -357,7 +356,6 @@ namespace VirtualJournalMVC.Controllers
                 }
                 return NotFound();
             }
-
             return View();
         }
 
@@ -401,7 +399,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 return NotFound();
             }
-
+            //bool response = _journal.DeleteSub<Note>(id); //Another option
             bool response = _note.Delete(id);
 
             if (response)
@@ -429,7 +427,7 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = DateTime.Now
             };
 
-            _note.Add(newComment);
+            _note.AddSub(newComment);
             return RedirectToAction("ShowNote", new { id = idNote });
         }
 
@@ -443,7 +441,7 @@ namespace VirtualJournalMVC.Controllers
                 return NotFound();
             }
 
-            bool postResponse = _comment.Delete(id);
+            bool postResponse = _note.DeleteSub<Comment>(id);
             return RedirectToAction("ShowNote", new { id = idNote });
         }
     }
