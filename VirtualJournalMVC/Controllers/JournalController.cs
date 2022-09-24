@@ -68,7 +68,7 @@ namespace VirtualJournalMVC.Controllers
                     //return RedirectToAction("Notes", new { id = 1 });
                     return RedirectToAction("Index");
                 }
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
             return View();
         }
@@ -79,13 +79,13 @@ namespace VirtualJournalMVC.Controllers
 
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Journal? postFromDb = _journal.Get(id.Value);
             if (postFromDb == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
 
             DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
@@ -96,11 +96,6 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = postFromDb.CreateDate,
                 LastEditDate = postFromDb.LastEditDate
             };
-
-            if(postFromDb == null)
-            {
-                return NotFound();
-            }
             return View(detailJournal);
         }
 
@@ -109,7 +104,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
@@ -118,7 +113,7 @@ namespace VirtualJournalMVC.Controllers
 
                 if(postFromDb == null)
                 {
-                    return NotFound();
+                    return View("~/Views/Shared/Failure.cshtml");
                 }
 
                 EditJournalViewModels editJournalViewModel = new EditJournalViewModels
@@ -128,13 +123,9 @@ namespace VirtualJournalMVC.Controllers
                     Message = postFromDb.Message
                 };
 
-                if (postFromDb == null)
-                {
-                    return NotFound();
-                }
                 return View(editJournalViewModel);
             }
-            return NotFound();
+            return View("~/Views/Shared/NotFound.cshtml");
         }
 
 
@@ -149,7 +140,7 @@ namespace VirtualJournalMVC.Controllers
                     Journal? postFromDb = _journal.Get(editJournal.IdJournal);
                     if (postFromDb == null)
                     {
-                        return NotFound();
+                        return View("~/Views/Shared/Failure.cshtml");
                     }
 
                     postFromDb.Title = editJournal.Title;
@@ -161,8 +152,9 @@ namespace VirtualJournalMVC.Controllers
                     {
                         return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
                     }
-                    return NotFound();
+                    return View("~/Views/Shared/Failure.cshtml");
                 }
+                return View("~/Views/Shared/NotFound.cshtml");
             }
             return View();
         }
@@ -172,13 +164,13 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Journal? postFromDb = _journal.Get(id.Value);
             if (postFromDb == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
 
             DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
@@ -189,11 +181,6 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = postFromDb.CreateDate,
                 LastEditDate = postFromDb.LastEditDate
             };
-
-            if (postFromDb == null)
-            {
-                return NotFound();
-            }
             return View(detailJournal);
         }
 
@@ -204,7 +191,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             bool postResponse = _journal.Delete(id);
@@ -212,7 +199,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return NotFound();
+            return View("~/Views/Shared/Failure.cshtml");
         }
 
 
@@ -220,7 +207,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             IEnumerable<Note> subPosts = _journal.GetNotes(id);
@@ -231,21 +218,21 @@ namespace VirtualJournalMVC.Controllers
                 HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
                 return View(subPosts);
             }
-            return NotFound();
-            
+            return View("~/Views/Shared/Failure.cshtml");
+
         }
 
         public IActionResult ShowNote(int? id)
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Note? postFromDb = _note.Get(id);
             if(postFromDb == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
 
             ShowNoteViewModel noteViewModel = new ShowNoteViewModel
@@ -282,7 +269,7 @@ namespace VirtualJournalMVC.Controllers
 
                 if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
                 {
-                    return NotFound();
+                    return View("~/Views/Shared/NotFound.cshtml");
                 }
 
                 Note newNote = new Note
@@ -310,13 +297,13 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Note? postFromDb = _note.Get(id);
             if (postFromDb == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
 
             EditNoteViewModel editNoteViewModel = new EditNoteViewModel
@@ -341,7 +328,7 @@ namespace VirtualJournalMVC.Controllers
                     Note? postFromDb = _note.Get(editNote.IdNote);
                     if (postFromDb == null)
                     {
-                        return NotFound();
+                        return View("~/Views/Shared/Failure.cshtml");
                     }
 
                     postFromDb.Title = editNote.Title;
@@ -353,8 +340,9 @@ namespace VirtualJournalMVC.Controllers
                     {
                         return RedirectToAction("ShowNote", new { id = editNote.IdNote });
                     }
+                    return View("~/Views/Shared/Failure.cshtml");
                 }
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
             return View();
         }
@@ -364,13 +352,13 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Note? postFromDb = _note.Get(id);
             if (postFromDb == null)
             {
-                return NotFound();
+                return View("~/Views/Shared/Failure.cshtml");
             }
 
             ShowNoteViewModel showNoteViewModel = new ShowNoteViewModel
@@ -382,11 +370,6 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = postFromDb.CreateDate,
                 LastEditDate = postFromDb.LastEditDate
             };
-
-            if (postFromDb == null)
-            {
-                return NotFound();
-            }
             return View(showNoteViewModel);
         }
 
@@ -397,7 +380,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
             //bool response = _journal.DeleteSub<Note>(id); //Another option
             bool response = _note.Delete(id);
@@ -407,7 +390,7 @@ namespace VirtualJournalMVC.Controllers
                 int? idJournal = HttpContext.Session.GetInt32("idJournalForNotes");
                 return RedirectToAction("Notes", new { id = idJournal });
             }
-            return NotFound();
+            return View("~/Views/Shared/Failure.cshtml");
         }
 
 
@@ -417,7 +400,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             Comment newComment = new Comment
@@ -427,8 +410,12 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = DateTime.Now
             };
 
-            _note.AddSub(newComment);
-            return RedirectToAction("ShowNote", new { id = idNote });
+            bool postResponse = _note.AddSub(newComment);
+            if(postResponse)
+            { 
+                return RedirectToAction("ShowNote", new { id = idNote });
+            }
+            return View("~/Views/Shared/Failure.cshtml");
         }
 
 
@@ -438,11 +425,15 @@ namespace VirtualJournalMVC.Controllers
         { 
             if(id == null || id == 0 || idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
             {
-                return NotFound();
+                return View("~/Views/Shared/NotFound.cshtml");
             }
 
             bool postResponse = _note.DeleteSub<Comment>(id);
-            return RedirectToAction("ShowNote", new { id = idNote });
+            if (postResponse)
+            {
+                return RedirectToAction("ShowNote", new { id = idNote });
+            }
+            return View("~/Views/Shared/Failure.cshtml");
         }
     }
 }
