@@ -12,8 +12,8 @@ namespace Data
         public bool Edit(T entity);
         public bool Delete(int? id);
 
-        public bool AddSub<X>(X entity) where X : class;
-        public bool EditSub<X>(X entity) where X : class;
-        public bool DeleteSub<X>(int? id) where X : class;
+        public bool AddChildEntity<X>(X entity) where X : class;
+        public bool EditChildEntity<X>(X entity) where X : class;
+        public bool DeleteChildEntity<X>(int? id) where X : class;
     }
 }

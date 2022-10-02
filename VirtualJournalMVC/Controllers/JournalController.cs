@@ -282,7 +282,7 @@ namespace VirtualJournalMVC.Controllers
                 };
 
 
-                bool responseIdNote = _journal.AddSub(newNote);
+                bool responseIdNote = _journal.AddChildEntity(newNote);
                 if (responseIdNote)
                 {
                     //return RedirectToAction("ShowNote", new { id = responseIdNote });
@@ -382,7 +382,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
-            //bool response = _journal.DeleteSub<Note>(id); //Another option
+            //bool response = _journal.DeleteChildEntity<Note>(id); //Another option
             bool response = _note.Delete(id);
 
             if (response)
@@ -410,7 +410,7 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = DateTime.Now
             };
 
-            bool postResponse = _note.AddSub(newComment);
+            bool postResponse = _note.AddChildEntity(newComment);
             if(postResponse)
             { 
                 return RedirectToAction("ShowNote", new { id = idNote });
@@ -428,7 +428,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            bool postResponse = _note.DeleteSub<Comment>(id);
+            bool postResponse = _note.DeleteChildEntity<Comment>(id);
             if (postResponse)
             {
                 return RedirectToAction("ShowNote", new { id = idNote });

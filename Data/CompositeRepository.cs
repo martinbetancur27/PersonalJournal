@@ -70,11 +70,11 @@ namespace Data
         }
 
 
-        public bool AddSub<X>(X subEntity) where X : class
+        public bool AddChildEntity<X>(X childEntity) where X : class
         {
             try
             {
-                _databaseContext.Set<X>().Add(subEntity); // Añadir IdUser como foreign key
+                _databaseContext.Set<X>().Add(childEntity); // Añadir IdUser como foreign key
                 _databaseContext.SaveChanges();
 
                 return true;
@@ -86,17 +86,17 @@ namespace Data
         }
 
 
-        public bool DeleteSub<X>(int? id) where X : class
+        public bool DeleteChildEntity<X>(int? id) where X : class
         {
             try
             {
-                var subEntity = _databaseContext.Set<X>().Find(id);
-                if (subEntity == null)
+                var childEntity = _databaseContext.Set<X>().Find(id);
+                if (childEntity == null)
                 {
                     return false;
                 }
 
-                _databaseContext.Set<X>().Remove(subEntity);
+                _databaseContext.Set<X>().Remove(childEntity);
                 _databaseContext.SaveChanges();
 
                 return true;
@@ -108,11 +108,11 @@ namespace Data
         }
 
 
-        public bool EditSub<X>(X subEntity) where X : class
+        public bool EditChildEntity<X>(X childEntity) where X : class
         {
             try
             {
-                _databaseContext.Set<X>().Update(subEntity);
+                _databaseContext.Set<X>().Update(childEntity);
                 _databaseContext.SaveChanges();
                 return true;
             }
