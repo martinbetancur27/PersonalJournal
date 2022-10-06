@@ -22,17 +22,17 @@
     </div>
 
     <div class="d-grid gap-2">
-        <a class="btn btn-light mb-1 btn-lg" asp-controller="Journal" asp-action="EditNote" asp-route-id="@Model?.Note.IdNote">
+        <a class="btn btn-light mb-1 btn-lg" asp-controller="Note" asp-action="EditNote" asp-route-id="@Model?.Note.IdNote">
             Edit
         </a>
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-outline-danger btn-sm"  asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@Model?.Note.IdNote">Delete</a>
+        <a class="btn btn-outline-danger btn-sm"  asp-controller="Note" asp-action="DeleteNote" asp-route-id="@Model?.Note.IdNote">Delete</a>
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-outline-secundary btn-sm"  asp-controller="Journal" asp-action="Notes" asp-route-id="@Model?.Note.IdJournal">Back</a>
+        <a class="btn btn-outline-secundary btn-sm"  asp-controller="Journal" asp-action="NotesOfJournal" asp-route-id="@Model?.Note.IdJournal">Back</a>
     </div>
 </section>
 
@@ -47,7 +47,7 @@
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit"  class="btn btn-primary mb-1 btn-sm" asp-controller="Journal" asp-action="AddComment" asp-route-idNote="@Model?.Note.IdNote">Send</button>
+            <button type="submit"  class="btn btn-primary mb-1 btn-sm" asp-controller="Comment" asp-action="AddComment" asp-route-idNote="@Model?.Note.IdNote">Send</button>
         </div>
     </form>              
 
@@ -63,7 +63,7 @@
             </div>
             
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Journal" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.Note.IdNote">Delete</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.Note.IdNote">Delete</button>
             </div>
             </form>
         }

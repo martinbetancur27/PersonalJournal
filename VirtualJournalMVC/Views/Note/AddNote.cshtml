@@ -1,16 +1,16 @@
-﻿@model Models.ViewModels.EditNoteViewModel
+﻿@model Models.ViewModels.CreateNoteViewModel
+
 
 @{
-    ViewData["Title"] = @Model?.Title;
+    ViewData["Title"] = "Add note";
 }
 
 <div class="container">
-    <h2>Edit Note</h2>
+    <h2>Add Note</h2>
 </div>
 
 <form method="post">
     <div class="container">
-        <input type="hidden" asp-for="IdNote" />
 
         <span asp-validation-for="Title" class="text-danger"></span>
         <div class="form-floating mb-3">
@@ -25,13 +25,13 @@
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-warning mb-1 btn-lg">
-        Edit
+        <button type="submit" class="btn btn-primary mb-1 btn-lg">
+        Send
         </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-secundary btn-lg" asp-controller="Journal" asp-action="ShowNote" asp-route-id="@Model?.IdNote">Maybe, Not!</a>
+            <a asp-controller="Journal" asp-action="NotesOfJournal" class="btn btn-outline-secundary btn-lg">Back</a>
         </div>
 
     </div>

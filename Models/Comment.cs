@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace Models
 {
     public class Comment
@@ -20,9 +13,6 @@ namespace Models
 
         public int IdNote { get; set; }
         //[ForeignKey("IdNote")]
-        public Note Note { get; set; }
-
-
-        
+        public Note Note { get; set; }   
     }
 }

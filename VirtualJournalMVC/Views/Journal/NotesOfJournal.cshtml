@@ -12,7 +12,7 @@
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a asp-controller="Journal" asp-action="AddNote" class="btn btn-primary mb-1">Add Note</a>
+        <a asp-controller="Note" asp-action="AddNote" class="btn btn-primary mb-1">Add Note</a>
     </div>
 
 <table class="table table-light table-striped table-hover w-100">
@@ -37,13 +37,13 @@
                     </td>
                     <td width="w-30">
                         <div class="w-75 btn-group flex-wrap" role="group">
-                            <a asp-controller="Journal" asp-action="ShowNote" asp-route-id="@post.IdNote"
+                            <a asp-controller="Note" asp-action="ShowNote" asp-route-id="@post.IdNote"
                             class="btn btn-outline-primary"> View</a>
 
-                            <a asp-controller="Journal" asp-action="EditNote" asp-route-id="@post.IdNote"
+                            <a asp-controller="Note" asp-action="EditNote" asp-route-id="@post.IdNote"
                             class="btn btn-outline-primary"> Edit</a>
 
-                            <a asp-controller="Journal" asp-action="DeleteNote" asp-route-id="@post.IdNote"
+                                <a asp-controller="Note" asp-action="DeleteNote" asp-route-id="@post.IdNote"
                             class="btn btn-outline-primary"> Delete</a>
                         </div>
                     </td>

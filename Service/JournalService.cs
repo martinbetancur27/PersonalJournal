@@ -1,49 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using IService;
-using Data;
+﻿using IService;
 using Models;
-
+using Data.Interfaces;
 
 namespace Service
 {
-    public class JournalService : CompositeRepository<Journal>, IJournal
+    public class JournalService : IJournal
     {
-
-        private readonly ApplicationDbContext _databaseContext;
+        private readonly IJournalRepository _journalRepository;
         
-        public JournalService(ApplicationDbContext db) : base(db)
+        public JournalService(IJournalRepository journalRepository)
         {
-            _databaseContext = db;
+            _journalRepository = journalRepository;
         }
 
-        public bool CreateJournal(Journal journal)
+        public int? AddJournal(Journal journal)
         {
-            try
-            {
-                _databaseContext.Journals.Add(journal);
-                return true;
-            }
-            catch(Exception)
-            {
-                return false;
-            }
+                return _journalRepository.AddJournal(journal);            
         }
 
-        public IEnumerable<Journal>? GetJournals(string idUser)
+        public bool RemoveJournal(int idJournal)
         {
-            return _databaseContext.Journals.Where(x => x.IdUser == idUser).OrderByDescending(d => d.CreateDate);
+            return _journalRepository.DeleteJournal(idJournal);
         }
 
-
-        public IEnumerable<Note> GetNotes(int? idJournal)
+        public bool EditJournal(Journal journal)
         {
-            return _databaseContext.Notes.Where(x => x.IdJournal == idJournal).OrderByDescending(d => d.CreateDate);
+            return _journalRepository.EditJournal(journal);
+        }
+
+        public Journal? FindJournal(int idJournal)
+        {
+            return _journalRepository.GetJournal(idJournal);
+        }
+
+        public IEnumerable<Journal>? GetJournalsOfUser(string idUser)
+        {
+            return _journalRepository.GetJournalsOfUser(idUser);
+        }
+
+        public IEnumerable<Note>? GetNotesOfJournal(int idJournal)
+        {
+            return _journalRepository.GetNotesOfJournal(idJournal);
         }
     }
 }

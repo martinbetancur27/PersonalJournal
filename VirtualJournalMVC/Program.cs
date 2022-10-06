@@ -4,7 +4,7 @@ using Models;
 using Service;
 using IService;
 using Microsoft.AspNetCore.Identity.UI.Services;
-
+using Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +14,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
     ));
 
 
+// Add Services
+
+builder.Services.AddScoped<IUserService, UserManagerService>();
+builder.Services.AddScoped<IAuthorizeOwner, AuthorizeOwner>();
+builder.Services.AddScoped<IJournal, JournalService>();
+builder.Services.AddScoped<INote, NoteService>();
+builder.Services.AddScoped<IComment, CommentService>();
+
+// Add repositories layers
+
+builder.Services.AddScoped<IJournalRepository, JournalRepositorySQL>();
+builder.Services.AddScoped<INoteRepository, NoteRepositorySQL>();
+builder.Services.AddScoped<ICommentRepository, CommentRepositorySQL>();
+
+
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
 
 
-// Identity
+// Add Identity
+
 builder.Services.AddDefaultIdentity<ApplicationUser>
     (options =>
     {
@@ -32,14 +49,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>
     })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<IUserService, UserManagerService>();
-builder.Services.AddScoped<IAuthorizeOwner, AuthorizeOwner>();
-
-
-builder.Services.AddScoped<IJournal, JournalService>();
-builder.Services.AddScoped<INote, NoteService>();
-
-
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -49,7 +58,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-//Email
+
+// Add Email
 
 builder.Services.Configure<SmtpService>(options =>
 {

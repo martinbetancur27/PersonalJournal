@@ -1,29 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IService;
-using Data;
+﻿using IService;
 using Models;
-
+using Data.Interfaces;
 
 namespace Service
 {
-    public class NoteService : CompositeRepository<Note>, INote
+    public class NoteService : INote
     {
-        private readonly ApplicationDbContext _databaseContext;
+        private readonly INoteRepository _noteRepository;
 
-
-        public NoteService(ApplicationDbContext db) : base(db)
+        public NoteService(INoteRepository noteRepository)
         {
-            _databaseContext = db;
+            _noteRepository = noteRepository;
         }
 
-
-        public IEnumerable<Comment> GetComments(int? idNote)
+        public int? AddNote(Note note)
         {
-            return _databaseContext.Comments.Where(x => x.IdNote == idNote).OrderByDescending(d => d.CreateDate);
+            return _noteRepository.AddNote(note);
+        }
+
+        public bool RemoveNote(int idNote)
+        {
+            return _noteRepository.RemoveNote(idNote);
+        }
+
+        public bool EditNote(Note note)
+        {
+            return _noteRepository.EditNote(note);
+        }
+
+        public Note? FindNote(int idNote)
+        {
+            return _noteRepository.FindNote(idNote);
+        }
+
+        public IEnumerable<Comment>? GetCommentsOfNote(int idNote)
+        {
+            return _noteRepository.GetCommentsOfNote(idNote);
         }
     }
 }

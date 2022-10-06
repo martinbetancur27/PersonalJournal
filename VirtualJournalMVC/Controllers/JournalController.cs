@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Data;
 using Models;
 using Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using IService;
-using Service;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace VirtualJournalMVC.Controllers
 {
@@ -17,17 +11,14 @@ namespace VirtualJournalMVC.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAuthorizeOwner _authorizeOwner;
-        private IJournal _journal;
-        private INote _note;
+        private IJournal _journalService;
 
 
-        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IJournal journal, INote note)
+        public JournalController(IUserService userService, IAuthorizeOwner authorizeOwner, IJournal journalService)
         {
             _userService = userService;
             _authorizeOwner = authorizeOwner;
-
-            _journal = journal;
-            _note = note;
+            _journalService = journalService;
         }
 
 
@@ -35,8 +26,9 @@ namespace VirtualJournalMVC.Controllers
         {
             string idUser = _userService.GetUserId();
 
-            IEnumerable<Journal>? journalsIndex = _journal.GetJournals(idUser); //Parameter 0 is select idUser as Root
-            return View(journalsIndex);
+            IEnumerable<Journal>? journalsOfUsers = _journalService.GetJournalsOfUser(idUser);
+
+            return View(journalsOfUsers);
         }
 
 
@@ -48,54 +40,56 @@ namespace VirtualJournalMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateJournal(CreateJournalViewModel createJournal)
+        public IActionResult CreateJournal(CreateJournalViewModel createJournalViewModel)
         {           
             if(ModelState.IsValid){
 
                 Journal newJournal = new Journal
                 {
                     IdUser = _userService.GetUserId(),
-                    Title = createJournal.Title,
-                    Message = createJournal.Message,
+                    Title = createJournalViewModel.Title,
+                    Message = createJournalViewModel.Message,
                     CreateDate = DateTime.Now,
                     LastEditDate = DateTime.Now
                 };
 
-                bool responseIdJournal = _journal.CreateJournal(newJournal);
+                int? responseIdJournal = _journalService.AddJournal(newJournal);
 
-                if(responseIdJournal)
+                if (responseIdJournal == null)
                 {
-                    //return RedirectToAction("Notes", new { id = 1 });
-                    return RedirectToAction("Index");
+                    return View("~/Views/Shared/Failure.cshtml");
                 }
-                return View("~/Views/Shared/Failure.cshtml");
+
+                return RedirectToAction("NotesOfJournal", new { id = responseIdJournal });
             }
+
             return View();
         }
 
 
         public IActionResult DetailsJournal(int? id)
         {
-
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Journal? postFromDb = _journal.Get(id.Value);
-            if (postFromDb == null)
+            Journal? journalFromDb = _journalService.FindJournal(id.Value);
+
+            if (journalFromDb == null)
             {
                 return View("~/Views/Shared/Failure.cshtml");
             }
 
             DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
             {
-                IdJournal = postFromDb.IdJournal,
-                Title = postFromDb.Title,
-                Message = postFromDb.Message,
-                CreateDate = postFromDb.CreateDate,
-                LastEditDate = postFromDb.LastEditDate
+                IdJournal = journalFromDb.IdJournal,
+                Title = journalFromDb.Title,
+                Message = journalFromDb.Message,
+                CreateDate = journalFromDb.CreateDate,
+                LastEditDate = journalFromDb.LastEditDate
             };
+
             return View(detailJournal);
         }
 
@@ -109,22 +103,23 @@ namespace VirtualJournalMVC.Controllers
 
             if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                Journal? postFromDb = _journal.Get(id);
+                Journal? journalFromDb = _journalService.FindJournal(id.Value);
 
-                if(postFromDb == null)
+                if (journalFromDb == null)
                 {
                     return View("~/Views/Shared/Failure.cshtml");
                 }
 
                 EditJournalViewModels editJournalViewModel = new EditJournalViewModels
                 {
-                    IdJournal = postFromDb.IdJournal,
-                    Title = postFromDb.Title,
-                    Message = postFromDb.Message
+                    IdJournal = journalFromDb.IdJournal,
+                    Title = journalFromDb.Title,
+                    Message = journalFromDb.Message
                 };
 
                 return View(editJournalViewModel);
             }
+
             return View("~/Views/Shared/NotFound.cshtml");
         }
 
@@ -133,29 +128,34 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditJournal(EditJournalViewModels editJournal)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetUserId()))
                 {
-                    Journal? postFromDb = _journal.Get(editJournal.IdJournal);
-                    if (postFromDb == null)
+                    Journal? journalFromDb = _journalService.FindJournal(editJournal.IdJournal);
+
+                    if (journalFromDb == null)
                     {
                         return View("~/Views/Shared/Failure.cshtml");
                     }
 
-                    postFromDb.Title = editJournal.Title;
-                    postFromDb.Message = editJournal.Message;
-                    postFromDb.LastEditDate = DateTime.Now;
+                    journalFromDb.Title = editJournal.Title;
+                    journalFromDb.Message = editJournal.Message;
+                    journalFromDb.LastEditDate = DateTime.Now;
 
-                    bool response = _journal.Edit(postFromDb);
-                    if (response)
+                    bool isJournalEdited = _journalService.EditJournal(journalFromDb);
+
+                    if (isJournalEdited)
                     {
                         return RedirectToAction("DetailsJournal", new { id = editJournal.IdJournal });
                     }
+
                     return View("~/Views/Shared/Failure.cshtml");
                 }
+
                 return View("~/Views/Shared/NotFound.cshtml");
             }
+
             return View();
         }
 
@@ -167,21 +167,23 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Journal? postFromDb = _journal.Get(id.Value);
-            if (postFromDb == null)
+            Journal? journalFromDb = _journalService.FindJournal(id.Value);
+
+            if (journalFromDb == null)
             {
                 return View("~/Views/Shared/Failure.cshtml");
             }
 
-            DetailsJournalViewModel detailJournal = new DetailsJournalViewModel
+            DetailsJournalViewModel detailsJournal = new DetailsJournalViewModel
             {
-                IdJournal = postFromDb.IdJournal,
-                Title = postFromDb.Title,
-                Message = postFromDb.Message,
-                CreateDate = postFromDb.CreateDate,
-                LastEditDate = postFromDb.LastEditDate
+                IdJournal = journalFromDb.IdJournal,
+                Title = journalFromDb.Title,
+                Message = journalFromDb.Message,
+                CreateDate = journalFromDb.CreateDate,
+                LastEditDate = journalFromDb.LastEditDate
             };
-            return View(detailJournal);
+
+            return View(detailsJournal);
         }
 
 
@@ -194,246 +196,33 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            bool postResponse = _journal.Delete(id);
-            if (postResponse)
+            bool isJournalRemoved = _journalService.RemoveJournal(id.Value);
+
+            if (isJournalRemoved)
             {
                 return RedirectToAction("Index");
             }
+
             return View("~/Views/Shared/Failure.cshtml");
         }
 
 
-        public IActionResult Notes(int? id)
+        public IActionResult NotesOfJournal(int? id)
         {
             if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            IEnumerable<Note> subPosts = _journal.GetNotes(id);
-                
-            //@ViewBag.idJournalForNotes = id; // Deberia ser con la variable Session. ViewBag es para pasar info a la vista. No entre controladores.
-            //ViewData es similar viewbag, la diferencia es que viewdata requiere casteo
-            if(subPosts != null){
-                HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
-                return View(subPosts);
-            }
-            return View("~/Views/Shared/Failure.cshtml");
+            IEnumerable<Note>? notesOfJournal = _journalService.GetNotesOfJournal(id.Value);
 
-        }
-
-        public IActionResult ShowNote(int? id)
-        {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            Note? postFromDb = _note.Get(id);
-            if(postFromDb == null)
+            if (notesOfJournal == null)
             {
                 return View("~/Views/Shared/Failure.cshtml");
             }
 
-            ShowNoteViewModel noteViewModel = new ShowNoteViewModel
-            {
-                IdNote = postFromDb.IdNote,
-                IdJournal = postFromDb.IdJournal,
-                Title = postFromDb.Title,
-                Message = postFromDb.Message,
-                CreateDate = postFromDb.CreateDate,
-                LastEditDate = postFromDb.LastEditDate
-            };
-
-            ShowNoteAndCommentsViewModel post = new ShowNoteAndCommentsViewModel();
-            post.Note = noteViewModel;
-            post.Comments = _note.GetComments(id);
-
-            return View(post);
-        }
-
-
-        public IActionResult AddNote()
-        {
-            return View();
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddNote(CreateNoteViewModel post)
-        {
-            if (ModelState.IsValid)
-            {
-                int? id = HttpContext.Session.GetInt32("idJournalForNotes");
-
-                if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
-                {
-                    return View("~/Views/Shared/NotFound.cshtml");
-                }
-
-                Note newNote = new Note
-                {
-                    IdJournal = id.Value,
-                    Title = post.Title,
-                    Message = post.Message,
-                    CreateDate = DateTime.Now,
-                    LastEditDate = DateTime.Now
-                };
-
-
-                bool responseIdNote = _journal.AddChildEntity(newNote);
-                if (responseIdNote)
-                {
-                    //return RedirectToAction("ShowNote", new { id = responseIdNote });
-                    return RedirectToAction("Notes", new { id = id });
-                }
-            }
-            return View();
-        }
-
-
-        public IActionResult EditNote(int? id)
-        {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            Note? postFromDb = _note.Get(id);
-            if (postFromDb == null)
-            {
-                return View("~/Views/Shared/Failure.cshtml");
-            }
-
-            EditNoteViewModel editNoteViewModel = new EditNoteViewModel
-            {
-                IdNote = id.Value,
-                Title = postFromDb.Title,
-                Message = postFromDb.Message
-
-            };
-            return View(editNoteViewModel);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditNote(EditNoteViewModel editNote)
-        {
-            if (ModelState.IsValid)
-            {
-                if(_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetUserId()))
-                {
-                    Note? postFromDb = _note.Get(editNote.IdNote);
-                    if (postFromDb == null)
-                    {
-                        return View("~/Views/Shared/Failure.cshtml");
-                    }
-
-                    postFromDb.Title = editNote.Title;
-                    postFromDb.Message = editNote.Message;
-                    postFromDb.LastEditDate = DateTime.Now;
-
-                    bool response = _note.Edit(postFromDb);
-                    if (response)
-                    {
-                        return RedirectToAction("ShowNote", new { id = editNote.IdNote });
-                    }
-                    return View("~/Views/Shared/Failure.cshtml");
-                }
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-            return View();
-        }
-
-
-        public IActionResult DeleteNote(int? id)
-        {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            Note? postFromDb = _note.Get(id);
-            if (postFromDb == null)
-            {
-                return View("~/Views/Shared/Failure.cshtml");
-            }
-
-            ShowNoteViewModel showNoteViewModel = new ShowNoteViewModel
-            {
-                IdNote = postFromDb.IdNote,
-                IdJournal = postFromDb.IdJournal,
-                Title = postFromDb.Title,
-                Message = postFromDb.Message,
-                CreateDate = postFromDb.CreateDate,
-                LastEditDate = postFromDb.LastEditDate
-            };
-            return View(showNoteViewModel);
-        }
-
-
-        [HttpPost,ActionName("DeleteNote")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteNotePOST(int? id)
-        {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-            //bool response = _journal.DeleteChildEntity<Note>(id); //Another option
-            bool response = _note.Delete(id);
-
-            if (response)
-            {
-                int? idJournal = HttpContext.Session.GetInt32("idJournalForNotes");
-                return RedirectToAction("Notes", new { id = idJournal });
-            }
-            return View("~/Views/Shared/Failure.cshtml");
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddComment(string commentText, int? idNote)
-        {
-            if (idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            Comment newComment = new Comment
-            {
-                IdNote = idNote.Value,
-                Message = commentText,
-                CreateDate = DateTime.Now
-            };
-
-            bool postResponse = _note.AddChildEntity(newComment);
-            if(postResponse)
-            { 
-                return RedirectToAction("ShowNote", new { id = idNote });
-            }
-            return View("~/Views/Shared/Failure.cshtml");
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteComment(int? id, int? idNote) 
-        { 
-            if(id == null || id == 0 || idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            bool postResponse = _note.DeleteChildEntity<Comment>(id);
-            if (postResponse)
-            {
-                return RedirectToAction("ShowNote", new { id = idNote });
-            }
-            return View("~/Views/Shared/Failure.cshtml");
+            HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
+            return View(notesOfJournal);
         }
     }
 }

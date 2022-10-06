@@ -1,8 +1,8 @@
 ﻿using Models;
 
-namespace IService
+namespace Data.Interfaces
 {
-    public interface INote
+    public interface INoteRepository
     {
         public int? AddNote(Note note);
         public Note? FindNote(int idNote);

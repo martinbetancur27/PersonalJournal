@@ -37,7 +37,7 @@
                     </td>
                     <td class="w-30">
                         <div class="w-75 btn-group flex-wrap" role="group">
-                            <a asp-controller="Journal" asp-action="Notes" asp-route-id="@post.IdJournal"
+                            <a asp-controller="Journal" asp-action="NotesOfJournal" asp-route-id="@post.IdJournal"
                             class="btn btn-outline-primary"> Notes</a>
                             
                             <a asp-controller="Journal" asp-action="DetailsJournal" asp-route-id="@post.IdJournal"
@@ -54,7 +54,6 @@
             {
                 <h4>You don't have journals</h4>
             }
-
         </tbody>
     </table>
 </div>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data;
+﻿using Data;
 using IService;
 using Models;
 
@@ -22,6 +17,7 @@ namespace Service
         public bool IsOwnerJournal(int idJournal, string idUser)
         {
             Journal? journal = _databaseContext.Journals.FirstOrDefault(x => x.IdJournal == idJournal && x.IdUser.Equals(idUser));
+
             if (journal == null)
             {
                 return false;
@@ -41,6 +37,7 @@ namespace Service
             }
 
             Journal? journal = _databaseContext.Journals.FirstOrDefault(x => x.IdJournal == note.IdJournal && x.IdUser.Equals(idUser));
+
             if (journal == null)
             {
                 return false;

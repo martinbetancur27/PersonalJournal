@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -15,6 +9,7 @@ namespace Service
     public class EmailServiceMailKit: IEmailSender
     {
         private readonly SmtpService _smtp;
+
         public EmailServiceMailKit(IOptions<SmtpService> smpt)
         {
             _smtp = smpt.Value;

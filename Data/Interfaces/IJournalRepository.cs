@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Models;
+﻿using Models;
 
-namespace IService
+namespace Data.Interfaces
 {
-    public interface IJournal
+    public interface IJournalRepository
     {
         public int? AddJournal(Journal journal);
-        public Journal? FindJournal(int idJournal);
+        public Journal? GetJournal(int idJournal);
         public bool EditJournal(Journal journal);
-        public bool RemoveJournal(int idJournal);
+        public bool DeleteJournal(int idJournal);
         public IEnumerable<Journal>? GetJournalsOfUser(string idUser);
         public IEnumerable<Note>? GetNotesOfJournal(int idJournal);
     }
