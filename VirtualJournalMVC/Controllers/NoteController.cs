@@ -199,7 +199,7 @@ namespace VirtualJournalMVC.Controllers
             if (isNoteRemoved)
             {
                 int? idJournal = HttpContext.Session.GetInt32("idJournalForNotes");
-                return RedirectToAction("NotesOfJournal", "Journal", new { id = idJournal });
+                return RedirectToAction("GetOfJournal", "Note", new { id = idJournal });
             }
 
             return View("~/Views/Shared/Failure.cshtml");
