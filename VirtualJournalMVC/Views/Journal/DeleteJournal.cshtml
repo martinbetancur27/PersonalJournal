@@ -9,7 +9,6 @@
 </div>
 
 <form method="post">
-
     <div class="container">
 
         <div class="form-floating mb-3">
@@ -24,13 +23,14 @@
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdJournal">
-        Delete
-        </button>
+            <button type="submit" class="btn btn-danger mb-1 btn-lg" asp-route-id="@Model?.IdJournal">
+                Delete
+            </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <a asp-controller="Journal" asp-action="Index" class="btn btn-outline-secundary btn-lg">Maybe, Not!</a>
         </div>
+
     </div>
 </form>

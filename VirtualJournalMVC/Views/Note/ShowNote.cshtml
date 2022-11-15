@@ -13,7 +13,6 @@
 </div>
 
 <section class="container">
-
     <h3 class="fw-bolder mb-3 text-secondary">@Model?.Note.Title</h3>
 
     <div class="form-floating form-outline mb-2">
@@ -37,7 +36,6 @@
 </section>
 
 <section class="container border border-light border-3 rounded">
-
     <h2>Comments</h2>
     
     <form method="post" >
@@ -54,25 +52,23 @@
     <div class="container">
         @if(Enumerable.Any(@Model?.Comments))
         {
-        foreach (var post in @Model?.Comments)
-        {
-            <form method="post">
-            <div class="form-floating">
-            <textarea readonly class="form-control btn-light" id="floatingTextarea3" style="height: 6.25rem;">@post.Message</textarea>
-            <label for="floatingTextarea3">Created: @post.CreateDate</label>
-            </div>
+            foreach (var post in @Model?.Comments)
+            {
+                <form method="post">
+                    <div class="form-floating">
+                        <textarea readonly class="form-control btn-light" id="floatingTextarea3" style="height: 6.25rem;">@post.Message</textarea>
+                        <label for="floatingTextarea3">Created: @post.CreateDate</label>
+                    </div>
             
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.Note.IdNote">Delete</button>
-            </div>
-            </form>
-        }
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-outline-danger btn-sm" asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@post.IdComment" asp-route-idNote="@Model?.Note.IdNote">Delete</button>
+                    </div>
+                </form>
+            }
         }
         else
         {
             <h3>No comment</h3>
         }
-        
-
     </div>
 </section>

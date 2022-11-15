@@ -12,22 +12,22 @@
     </div>
 </div>
 
-    <div class="container">
-        <div>
+<div class="container">
+    <div>
         <h3 id= "titleNoteStatic" class="fw-bolder mb-3 text-secondary">@Model?.Title</h3>
-        </div>
-
-
-        <div class="form-floating">
-            <textarea asp-for="Message" readonly maxlength="1200" class="form-control bg-white" id="floatingTextarea2" style="height: 14rem;"></textarea>
-            <label for="floatingTextarea2">Modified: @Model?.LastEditDate</label>
-        </div>
-
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-warning btn-lg" asp-controller="Journal" asp-action="EditJournal" asp-route-id="@Model?.IdJournal">Edit</a>
-        </div>
-
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a asp-controller="Journal" asp-action="Index" class="btn btn-outline-secundary btn-lg">Back</a>
-        </div>
     </div>
+
+
+    <div class="form-floating">
+        <textarea asp-for="Message" readonly maxlength="1200" class="form-control bg-white" id="floatingTextarea2" style="height: 14rem;"></textarea>
+        <label for="floatingTextarea2">Modified: @Model?.LastEditDate</label>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-outline-warning btn-lg" asp-controller="Journal" asp-action="EditJournal" asp-route-id="@Model?.IdJournal">Edit</a>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a asp-controller="Journal" asp-action="Index" class="btn btn-outline-secundary btn-lg">Back</a>
+    </div>
+</div>

@@ -6,7 +6,6 @@
 }
 
 <div class="container h-80 border rounded">
-
     <div class="d-grid gap-2 d-md-flex">
         <h2>Notes</h2>
     </div>
@@ -15,45 +14,45 @@
         <a asp-controller="Note" asp-action="AddNote" class="btn btn-primary mb-1">Add Note</a>
     </div>
 
-<table class="table table-light table-striped table-hover w-100">
-    <thead class="sticky-top">
-        <tr>
-            <th>Date</th>
-            <th>Notes</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if(Enumerable.Any(Model))
-        {
-            @foreach (var post in Model)
+    <table class="table table-light table-striped table-hover w-100">
+        <thead class="sticky-top">
+            <tr>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Enumerable.Any(Model))
             {
-                <tr>
-                    <td width="w-20">
-                        @post.CreateDate
-                    </td>
-                    <td width="w-50">
-                        @post.Title
-                    </td>
-                    <td width="w-30">
-                        <div class="w-75 btn-group flex-wrap" role="group">
-                            <a asp-controller="Note" asp-action="ShowNote" asp-route-id="@post.IdNote"
-                            class="btn btn-outline-primary"> View</a>
+                @foreach (var post in Model)
+                {
+                    <tr>
+                        <td width="w-20">
+                            @post.CreateDate
+                        </td>
+                        <td width="w-50">
+                            @post.Title
+                        </td>
+                        <td width="w-30">
+                            <div class="w-75 btn-group flex-wrap" role="group">
+                                <a asp-controller="Note" asp-action="ShowNote" asp-route-id="@post.IdNote"
+                                    class="btn btn-outline-primary"> View</a>
 
-                            <a asp-controller="Note" asp-action="EditNote" asp-route-id="@post.IdNote"
-                            class="btn btn-outline-primary"> Edit</a>
+                                <a asp-controller="Note" asp-action="EditNote" asp-route-id="@post.IdNote"
+                                    class="btn btn-outline-primary"> Edit</a>
 
                                 <a asp-controller="Note" asp-action="DeleteNote" asp-route-id="@post.IdNote"
-                            class="btn btn-outline-primary"> Delete</a>
-                        </div>
-                    </td>
-                </tr>
+                                    class="btn btn-outline-primary"> Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
-        }
-        else
-        {
-            <h4>You don't have notes</h4>
-        }
-    </tbody>
-</table>
+            else
+            {
+                <h4>You don't have notes</h4>
+            }
+        </tbody>
+    </table>
 </div>

@@ -14,20 +14,20 @@
 
         <span asp-validation-for="Title" class="text-danger"></span>
         <div class="form-floating mb-3">
-        <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
-        <label for="titleNote">Write your title</label>
+            <input asp-for="Title" id= "titleNote" class="form-control text fw-bolder mb-3 text-secondary" aria-describedby="inputGroup-sizing-lg"/>
+            <label for="titleNote">Write your title</label>
         </div>
 
         <span asp-validation-for="Message" class="text-danger"></span>
         <div class="form-floating form-outline mb-2">
-        <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 32rem;"></textarea>
-        <label for="textAreaNote">Write your note</label>  
+            <textarea asp-for="Message" maxlength="15000" id="textAreaNote" class="form-control" rows="18" style="height: 32rem;"></textarea>
+            <label for="textAreaNote">Write your note</label>  
         </div>
 
         <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary mb-1 btn-lg">
-        Send
-        </button>
+            <button type="submit" class="btn btn-primary mb-1 btn-lg">
+                Send
+            </button>
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
