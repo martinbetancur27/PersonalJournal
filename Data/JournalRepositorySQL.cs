@@ -12,7 +12,7 @@ namespace Data
             _databaseContext = db;
         }
 
-        public int? AddJournal(Journal journal)
+        public int? Add(Journal journal)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Data
             }
         }
 
-        public Journal? GetJournal(int idJournal)
+        public Journal? Get(int idJournal)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Data
             }
         }
 
-        public bool EditJournal(Journal journal)
+        public bool Edit(Journal journal)
         {
             try
             {
@@ -53,11 +53,11 @@ namespace Data
             }
         }
 
-        public bool DeleteJournal(int idJournal)
+        public bool Delete(int idJournal)
         {
             try
             {
-                var journalDb = GetJournal(idJournal);
+                var journalDb = Get(idJournal);
                 if (journalDb == null)
                 {
                     return false;
@@ -74,23 +74,11 @@ namespace Data
             }
         }
 
-        public IEnumerable<Journal>? GetJournalsOfUser(string idUser)
+        public IEnumerable<Journal>? GetOfUser(string idUser)
         {
             try
             {
                 return _databaseContext.Journals.Where(x => x.IdUser == idUser).OrderByDescending(d => d.CreateDate);
-            }
-            catch (System.Exception)
-            {
-                return null;
-            }
-        }
-
-        public IEnumerable<Note>? GetNotesOfJournal(int idJournal)
-        {
-            try
-            {
-                return _databaseContext.Notes.Where(x => x.IdJournal == idJournal).OrderByDescending(d => d.CreateDate);
             }
             catch (System.Exception)
             {

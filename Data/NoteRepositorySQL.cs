@@ -12,7 +12,7 @@ namespace Data
             _databaseContext = db;
         }
 
-        public int? AddNote(Note note)
+        public int? Add(Note note)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Data
             }
         }
 
-        public Note? FindNote(int idNote)
+        public Note? Find(int idNote)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Data
             }
         }
 
-        public bool EditNote(Note note)
+        public bool Edit(Note note)
         {
             try
             {
@@ -53,11 +53,11 @@ namespace Data
             }
         }
 
-        public bool RemoveNote(int idNote)
+        public bool Remove(int idNote)
         {
             try
             {
-                Note? noteDb = FindNote(idNote);
+                Note? noteDb = Find(idNote);
                 if (noteDb == null)
                 {
                     return false;
@@ -74,11 +74,11 @@ namespace Data
             }
         }
 
-        public IEnumerable<Comment>? GetCommentsOfNote(int idNote)
+        public IEnumerable<Note>? GetOfJournal(int idJournal)
         {
             try
             {
-                return _databaseContext.Comments.Where(x => x.IdNote == idNote).OrderByDescending(d => d.CreateDate);
+                return _databaseContext.Notes.Where(x => x.IdJournal == idJournal).OrderByDescending(d => d.CreateDate);
             }
             catch (System.Exception)
             {

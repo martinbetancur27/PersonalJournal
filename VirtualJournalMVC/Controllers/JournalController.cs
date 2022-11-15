@@ -26,7 +26,7 @@ namespace VirtualJournalMVC.Controllers
         {
             string idUser = _userService.GetUserId();
 
-            IEnumerable<Journal>? journalsOfUsers = _journalService.GetJournalsOfUser(idUser);
+            IEnumerable<Journal>? journalsOfUsers = _journalService.GetOfUser(idUser);
 
             return View(journalsOfUsers);
         }
@@ -53,7 +53,7 @@ namespace VirtualJournalMVC.Controllers
                     LastEditDate = DateTime.Now
                 };
 
-                int? responseIdJournal = _journalService.AddJournal(newJournal);
+                int? responseIdJournal = _journalService.Add(newJournal);
 
                 if (responseIdJournal == null)
                 {
@@ -74,7 +74,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Journal? journalFromDb = _journalService.FindJournal(id.Value);
+            Journal? journalFromDb = _journalService.Find(id.Value);
 
             if (journalFromDb == null)
             {
@@ -103,7 +103,7 @@ namespace VirtualJournalMVC.Controllers
 
             if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
             {
-                Journal? journalFromDb = _journalService.FindJournal(id.Value);
+                Journal? journalFromDb = _journalService.Find(id.Value);
 
                 if (journalFromDb == null)
                 {
@@ -132,7 +132,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetUserId()))
                 {
-                    Journal? journalFromDb = _journalService.FindJournal(editJournal.IdJournal);
+                    Journal? journalFromDb = _journalService.Find(editJournal.IdJournal);
 
                     if (journalFromDb == null)
                     {
@@ -143,7 +143,7 @@ namespace VirtualJournalMVC.Controllers
                     journalFromDb.Message = editJournal.Message;
                     journalFromDb.LastEditDate = DateTime.Now;
 
-                    bool isJournalEdited = _journalService.EditJournal(journalFromDb);
+                    bool isJournalEdited = _journalService.Edit(journalFromDb);
 
                     if (isJournalEdited)
                     {
@@ -167,7 +167,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Journal? journalFromDb = _journalService.FindJournal(id.Value);
+            Journal? journalFromDb = _journalService.Find(id.Value);
 
             if (journalFromDb == null)
             {
@@ -196,7 +196,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            bool isJournalRemoved = _journalService.RemoveJournal(id.Value);
+            bool isJournalRemoved = _journalService.Remove(id.Value);
 
             if (isJournalRemoved)
             {
@@ -204,25 +204,6 @@ namespace VirtualJournalMVC.Controllers
             }
 
             return View("~/Views/Shared/Failure.cshtml");
-        }
-
-
-        public IActionResult NotesOfJournal(int? id)
-        {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
-            {
-                return View("~/Views/Shared/NotFound.cshtml");
-            }
-
-            IEnumerable<Note>? notesOfJournal = _journalService.GetNotesOfJournal(id.Value);
-
-            if (notesOfJournal == null)
-            {
-                return View("~/Views/Shared/Failure.cshtml");
-            }
-
-            HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
-            return View(notesOfJournal);
         }
     }
 }

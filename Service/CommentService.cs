@@ -13,14 +13,19 @@ namespace Service
             _commentRepository = commentRepository;
         }
 
-        public int? AddComment(Comment comment)
+        public int? Add(Comment comment)
         {
-            return _commentRepository.AddComment(comment);
+            return _commentRepository.Add(comment);
         }
 
-        public bool RemoveComment(int idComment)
+        public bool Remove(int idComment)
         {
-            return _commentRepository.RemoveComment(idComment);
+            return _commentRepository.Remove(idComment);
+        }
+
+        public IEnumerable<Comment>? GetOfNote(int idNote)
+        {
+            return _commentRepository.GetOfNote(idNote);
         }
     }
 }

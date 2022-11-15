@@ -4,7 +4,8 @@ namespace Data.Interfaces
 {
     public interface ICommentRepository
     {
-        public int? AddComment(Comment comment);
-        public bool RemoveComment(int idComment);
+        public int? Add(Comment comment);
+        public bool Remove(int idComment);
+        public IEnumerable<Comment>? GetOfNote(int idNote);
     }
 }

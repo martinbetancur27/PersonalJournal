@@ -4,11 +4,10 @@ namespace Data.Interfaces
 {
     public interface IJournalRepository
     {
-        public int? AddJournal(Journal journal);
-        public Journal? GetJournal(int idJournal);
-        public bool EditJournal(Journal journal);
-        public bool DeleteJournal(int idJournal);
-        public IEnumerable<Journal>? GetJournalsOfUser(string idUser);
-        public IEnumerable<Note>? GetNotesOfJournal(int idJournal);
+        public int? Add(Journal journal);
+        public Journal? Get(int idJournal);
+        public bool Edit(Journal journal);
+        public bool Delete(int idJournal);
+        public IEnumerable<Journal>? GetOfUser(string idUser);
     }
 }

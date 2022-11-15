@@ -13,34 +13,29 @@ namespace Service
             _journalRepository = journalRepository;
         }
 
-        public int? AddJournal(Journal journal)
+        public int? Add(Journal journal)
         {
-                return _journalRepository.AddJournal(journal);            
+                return _journalRepository.Add(journal);            
         }
 
-        public bool RemoveJournal(int idJournal)
+        public bool Remove(int idJournal)
         {
-            return _journalRepository.DeleteJournal(idJournal);
+            return _journalRepository.Delete(idJournal);
         }
 
-        public bool EditJournal(Journal journal)
+        public bool Edit(Journal journal)
         {
-            return _journalRepository.EditJournal(journal);
+            return _journalRepository.Edit(journal);
         }
 
-        public Journal? FindJournal(int idJournal)
+        public Journal? Find(int idJournal)
         {
-            return _journalRepository.GetJournal(idJournal);
+            return _journalRepository.Get(idJournal);
         }
 
-        public IEnumerable<Journal>? GetJournalsOfUser(string idUser)
+        public IEnumerable<Journal>? GetOfUser(string idUser)
         {
-            return _journalRepository.GetJournalsOfUser(idUser);
-        }
-
-        public IEnumerable<Note>? GetNotesOfJournal(int idJournal)
-        {
-            return _journalRepository.GetNotesOfJournal(idJournal);
+            return _journalRepository.GetOfUser(idUser);
         }
     }
 }

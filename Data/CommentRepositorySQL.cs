@@ -12,7 +12,7 @@ namespace Data
             _databaseContext = db;
         }
 
-        public int? AddComment(Comment comment)
+        public int? Add(Comment comment)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Data
             }
         }
 
-        public bool RemoveComment(int idComment)
+        public bool Remove(int idComment)
         {
             try
             {
@@ -57,6 +57,18 @@ namespace Data
             catch (System.Exception)
             {
                 return false;
+            }
+        }
+
+        public IEnumerable<Comment>? GetOfNote(int idNote)
+        {
+            try
+            {
+                return _databaseContext.Comments.Where(x => x.IdNote == idNote).OrderByDescending(d => d.CreateDate);
+            }
+            catch (System.Exception)
+            {
+                return null;
             }
         }
     }

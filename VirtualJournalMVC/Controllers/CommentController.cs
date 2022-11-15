@@ -34,7 +34,7 @@ namespace VirtualJournalMVC.Controllers
                 CreateDate = DateTime.Now
             };
 
-            int? postResponse = _commentService.AddComment(newComment);
+            int? postResponse = _commentService.Add(newComment);
 
             if (postResponse == null)
             {
@@ -54,7 +54,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            bool postResponse = _commentService.RemoveComment(id.Value);
+            bool postResponse = _commentService.Remove(id.Value);
 
             if (postResponse)
             {

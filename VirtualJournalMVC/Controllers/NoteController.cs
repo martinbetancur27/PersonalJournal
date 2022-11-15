@@ -11,13 +11,15 @@ namespace VirtualJournalMVC.Controllers
     {
         private INote _noteService;
         private readonly IUserService _userService;
+        private IComment _commentService;
         private readonly IAuthorizeOwner _authorizeOwner;
 
-        public NoteController(IUserService userService, IAuthorizeOwner authorizeOwner, INote noteService)
+        public NoteController(IUserService userService, IAuthorizeOwner authorizeOwner, INote noteService, IComment commentService)
         {
             _userService = userService;
             _authorizeOwner = authorizeOwner;
             _noteService = noteService;
+            _commentService = commentService;
         }
 
 
@@ -28,7 +30,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Note? noteFromDb = _noteService.FindNote(id.Value);
+            Note? noteFromDb = _noteService.Find(id.Value);
 
             if (noteFromDb == null)
             {
@@ -47,7 +49,7 @@ namespace VirtualJournalMVC.Controllers
 
             ShowNoteAndCommentsViewModel showNoteAndCommentsViewModel = new ShowNoteAndCommentsViewModel();
             showNoteAndCommentsViewModel.Note = noteViewModel;
-            showNoteAndCommentsViewModel.Comments = _noteService.GetCommentsOfNote(id.Value);
+            showNoteAndCommentsViewModel.Comments = _commentService.GetOfNote(id.Value);
 
             return View(showNoteAndCommentsViewModel);
         }
@@ -81,7 +83,7 @@ namespace VirtualJournalMVC.Controllers
                     LastEditDate = DateTime.Now
                 };
 
-                int? responseIdNote = _noteService.AddNote(newNote);
+                int? responseIdNote = _noteService.Add(newNote);
 
                 if (responseIdNote == null)
                 {
@@ -102,7 +104,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Note? noteFromDb = _noteService.FindNote(id.Value);
+            Note? noteFromDb = _noteService.Find(id.Value);
 
             if (noteFromDb == null)
             {
@@ -128,7 +130,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 if (_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetUserId()))
                 {
-                    Note? noteFromDb = _noteService.FindNote(editNote.IdNote);
+                    Note? noteFromDb = _noteService.Find(editNote.IdNote);
                     if (noteFromDb == null)
                     {
                         return View("~/Views/Shared/Failure.cshtml");
@@ -138,7 +140,7 @@ namespace VirtualJournalMVC.Controllers
                     noteFromDb.Message = editNote.Message;
                     noteFromDb.LastEditDate = DateTime.Now;
 
-                    bool isNoteEdited = _noteService.EditNote(noteFromDb);
+                    bool isNoteEdited = _noteService.Edit(noteFromDb);
 
                     if (isNoteEdited)
                     {
@@ -162,7 +164,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            Note? noteFromDb = _noteService.FindNote(id.Value);
+            Note? noteFromDb = _noteService.Find(id.Value);
 
             if (noteFromDb == null)
             {
@@ -192,7 +194,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
             
-            bool isNoteRemoved = _noteService.RemoveNote(id.Value);
+            bool isNoteRemoved = _noteService.Remove(id.Value);
 
             if (isNoteRemoved)
             {
@@ -201,6 +203,25 @@ namespace VirtualJournalMVC.Controllers
             }
 
             return View("~/Views/Shared/Failure.cshtml");
+        }
+
+
+        public IActionResult GetOfJournal(int? id)
+        {
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            {
+                return View("~/Views/Shared/NotFound.cshtml");
+            }
+
+            IEnumerable<Note>? notesOfJournal = _noteService.GetOfJournal(id.Value);
+
+            if (notesOfJournal == null)
+            {
+                return View("~/Views/Shared/Failure.cshtml");
+            }
+
+            HttpContext.Session.SetInt32("idJournalForNotes", id.Value);
+            return View(notesOfJournal);
         }
     }
 }

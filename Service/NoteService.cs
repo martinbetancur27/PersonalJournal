@@ -13,29 +13,29 @@ namespace Service
             _noteRepository = noteRepository;
         }
 
-        public int? AddNote(Note note)
+        public int? Add(Note note)
         {
-            return _noteRepository.AddNote(note);
+            return _noteRepository.Add(note);
         }
 
-        public bool RemoveNote(int idNote)
+        public bool Remove(int idNote)
         {
-            return _noteRepository.RemoveNote(idNote);
+            return _noteRepository.Remove(idNote);
         }
 
-        public bool EditNote(Note note)
+        public bool Edit(Note note)
         {
-            return _noteRepository.EditNote(note);
+            return _noteRepository.Edit(note);
         }
 
-        public Note? FindNote(int idNote)
+        public Note? Find(int idNote)
         {
-            return _noteRepository.FindNote(idNote);
+            return _noteRepository.Find(idNote);
         }
 
-        public IEnumerable<Comment>? GetCommentsOfNote(int idNote)
+        public IEnumerable<Note>? GetOfJournal(int idJournal)
         {
-            return _noteRepository.GetCommentsOfNote(idNote);
+            return _noteRepository.GetOfJournal(idJournal);
         }
     }
 }
