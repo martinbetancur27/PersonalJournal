@@ -22,7 +22,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddComment(string commentText, int? idNote)
         {
-            if (idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
+            if (idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -49,7 +49,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteComment(int? id, int? idNote)
         {
-            if (id == null || id == 0 || idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetUserId()))
+            if (id == null || id == 0 || idNote == null || idNote == 0 || !_authorizeOwner.IsOwnerNote(idNote.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }

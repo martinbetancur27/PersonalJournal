@@ -13,7 +13,7 @@ namespace Service
         {
             _userManager = userManager;
         }
-        public string GetUserId()
+        public string GetId()
         {
             return _userManager.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }

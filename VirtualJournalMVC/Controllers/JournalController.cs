@@ -24,7 +24,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult Index()
         {
-            string idUser = _userService.GetUserId();
+            string idUser = _userService.GetId();
 
             IEnumerable<Journal>? journalsOfUsers = _journalService.GetOfUser(idUser);
 
@@ -46,7 +46,7 @@ namespace VirtualJournalMVC.Controllers
 
                 Journal newJournal = new Journal
                 {
-                    IdUser = _userService.GetUserId(),
+                    IdUser = _userService.GetId(),
                     Title = createJournalViewModel.Title,
                     Message = createJournalViewModel.Message,
                     CreateDate = DateTime.Now,
@@ -69,7 +69,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult DetailsJournal(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -101,7 +101,7 @@ namespace VirtualJournalMVC.Controllers
                 return View("~/Views/Shared/NotFound.cshtml");
             }
 
-            if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            if (_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
             {
                 Journal? journalFromDb = _journalService.Find(id.Value);
 
@@ -130,7 +130,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetUserId()))
+                if (_authorizeOwner.IsOwnerJournal(editJournal.IdJournal, _userService.GetId()))
                 {
                     Journal? journalFromDb = _journalService.Find(editJournal.IdJournal);
 
@@ -162,7 +162,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult DeleteJournal(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -191,7 +191,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteJournalPOST(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }

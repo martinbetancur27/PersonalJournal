@@ -25,7 +25,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult ShowNote(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -69,7 +69,7 @@ namespace VirtualJournalMVC.Controllers
             {
                 int? id = HttpContext.Session.GetInt32("idJournalForNotes");
 
-                if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+                if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
                 {
                     return View("~/Views/Shared/NotFound.cshtml");
                 }
@@ -99,7 +99,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult EditNote(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -128,7 +128,7 @@ namespace VirtualJournalMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetUserId()))
+                if (_authorizeOwner.IsOwnerNote(editNote.IdNote, _userService.GetId()))
                 {
                     Note? noteFromDb = _noteService.Find(editNote.IdNote);
                     if (noteFromDb == null)
@@ -159,7 +159,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult DeleteNote(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -189,7 +189,7 @@ namespace VirtualJournalMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteNotePOST(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerNote(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
@@ -208,7 +208,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult GetOfJournal(int? id)
         {
-            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetUserId()))
+            if (id == 0 || id == null || !_authorizeOwner.IsOwnerJournal(id.Value, _userService.GetId()))
             {
                 return View("~/Views/Shared/NotFound.cshtml");
             }
