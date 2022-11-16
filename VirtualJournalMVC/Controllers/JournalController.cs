@@ -60,7 +60,7 @@ namespace VirtualJournalMVC.Controllers
                     return View("~/Views/Shared/Failure.cshtml");
                 }
 
-                return RedirectToAction("NotesOfJournal", new { id = responseIdJournal });
+                return RedirectToAction("GetOfJournal", "Note", new { id = responseIdJournal });
             }
 
             return View();

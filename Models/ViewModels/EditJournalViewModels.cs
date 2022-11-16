@@ -7,11 +7,12 @@ namespace Models.ViewModels
     {
         [Required]
         public int IdJournal { get; set; }
+        
         [Required]
-        [MaxLength(100)]
+        [StringLength(100)]
         public string Title { get; set; }
-        [Required]
-        [MaxLength(1200)]
+
+        [StringLength(1200)]
         public string? Message { get; set; }
     }
 }

@@ -7,11 +7,13 @@ namespace Models.ViewModels
     {
         [Required]
         public int IdNote { get; set; }
+
         [Required]
-        [MaxLength(100)]
+        [StringLength(100)]
         public string Title { get; set; }
+        
         [Required]
-        [MaxLength(15000)]
+        [StringLength(15000)]
         public string Message { get; set; }
     }
 }

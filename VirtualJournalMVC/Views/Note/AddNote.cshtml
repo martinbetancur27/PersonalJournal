@@ -10,6 +10,7 @@
 </div>
 
 <form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="container">
 
         <span asp-validation-for="Title" class="text-danger"></span>
@@ -36,3 +37,9 @@
 
     </div>
 </form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

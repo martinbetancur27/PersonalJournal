@@ -9,6 +9,7 @@
 </div>
 
 <form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="container">
 
         <input type="hidden" asp-for="IdNote" />
@@ -37,3 +38,9 @@
 
     </div>
 </form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
