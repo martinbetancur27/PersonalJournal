@@ -57,6 +57,7 @@ namespace VirtualJournalMVC.Controllers
 
         public IActionResult AddNote()
         {
+            ViewBag.IdJournal = HttpContext.Session.GetInt32("idJournalForNotes");
             return View();
         }
 
