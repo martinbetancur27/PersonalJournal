@@ -28,7 +28,8 @@ https://personaljournalapp.azurewebsites.net
 
 ## Warnings
 
-User registration: emails should be confirmed. I am not attaching the functionality so as not to waste time for users testing the application.
+* User registration: emails should be confirmed. I am not attaching the functionality so as not to waste time for users testing the application.
+* To not include passwords in the code you can use Azure key vault
 
 ## Pending improvements
 
