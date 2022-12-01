@@ -33,9 +33,11 @@ https://personaljournalapp.azurewebsites.net
 
 ## Pending improvements
 
+* Allow only 12 journals per user and 15 notes for each journal
 * Add authentication with Google.
-* Add pagination
-* Allow only 12 journals and 15 notes for each journal
+* Create an individual method in each repository called SaveChangesAsync that calls EF's SaveChangesAsync() ; it must be called from the service layer and remove the save on each Add, Delete and Update of the repositories. Another way to implement it is with Unit Of Work. The EF context already provides the Unit of Work functionality but an extra layer could be created.
+* Place the generic repository pattern. I had previously implemented it but removed it for fear of losing code readability and increasing coupling. I conclude that the generic does not increase coupling or decrease cohesion because it is on the same EF library. Meet DRY.
+* Create extension method to separate dependency injection configuration; another to separate the connection configuration to the database.
 
 # UML
 
