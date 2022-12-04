@@ -13,6 +13,10 @@ N-Layer Architecture
 
 https://personaljournalapp.azurewebsites.net
 
+# Watch video of how it works 🎥
+
+https://www.dropbox.com/s/j9vyuogxun36x1u/PersonalJournal.mp4?dl=0
+
 # 🛠 Skills
 * C#
 * Razor Pages
