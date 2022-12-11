@@ -1,5 +1,7 @@
 # ASP.Net Core Web App (MVC) with Razor Pages
 
+## If you're short on time, AuthJWTProject is my best practice project.
+---
 # Tech Stack
 
 **Client:** Html, Bootstrap 5, C# (Razor)
