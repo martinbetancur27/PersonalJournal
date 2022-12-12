@@ -12,14 +12,8 @@
 N-Layer Architecture
 ```
 # Try App 👩‍💻
-
-https://personaljournalapp.azurewebsites.net
-
-**OPTIONAL FOR LOGIN:**
-
-User: admin@personaljournal.com
-
-Password: 123456
+## Sorry, the resources have been deleted. The video shows how it works.
+https://personaljournalapp.azurewebsites.net  DONT WORK
 
 
 # Watch video of how it works 🎥
@@ -41,8 +35,9 @@ https://www.dropbox.com/s/j9vyuogxun36x1u/PersonalJournal.mp4?dl=0
 
 ## Warnings
 
+* The controller has logic that should be placed in the service layer. In the other two .Net projects the principle is fulfilled.
 * User registration: emails should be confirmed. I am not attaching the functionality so as not to waste time for users testing the application. Also, do not configure to require a strong password to make testing easier.
-* To not include passwords in the code you can use Azure key vault
+* To not include passwords in the code you can use Azure key vault.
 
 ## Pending improvements
 
